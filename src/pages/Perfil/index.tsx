@@ -3,11 +3,9 @@ import Grid from '@material-ui/core/Grid';
 import { FiArrowLeft, FiMail, FiUser, FiLock } from 'react-icons/fi';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
-
 import * as Yup from 'yup';
 import { Link, useHistory } from 'react-router-dom';
 import api from '../../services/api';
-import logoImg from '../../assets/logo.svg';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 
@@ -15,7 +13,7 @@ import getValidationsErros from '../../utils/getValidationsErrors';
 import { useToast } from '../../hooks/Toast';
 import { Container, Content, AnimationContainer, Background } from './styles';
 
-interface SignUpFormData {
+interface PerfilFormData {
   name: string;
   sobrenome: string;
   rg: string;
@@ -36,35 +34,51 @@ interface SignUpFormData {
   dddCelular: string;
   celular: string;
 }
-const SignUp: React.FC = () => {
+const Perfil: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const { addToast } = useToast();
   const history = useHistory();
   const handleSubmit = useCallback(
-    async (data: SignUpFormData) => {
+    async (data: PerfilFormData) => {
       try {
         formRef.current?.setErrors({});
         const schema = Yup.object().shape({
           name: Yup.string().required('Nome obrigatório'),
+
           sobrenome: Yup.string().required('Sobrenome obrigatório'),
-          rg: Yup.string().required('RG obrigatório').max(9),
-          cpf: Yup.string().required('CPF obrigatório'),
-          email: Yup.string()
-            .required('E-mail obrigatório')
-            .email('Digite um e-mail válido'),
+
+          rg: Yup.string().required('RG obrigatório').min(12, 'RG Inválido. Corrija a quantidade de caracteres'),
+          
+          cpf: Yup.string().required('CPF obrigatório').min(14,'CPF Invalido. Corrija a quantidade de caracteres'),
+
+          email: Yup.string().required('E-mail obrigatório').email('Digite um e-mail válido'),
+
           password: Yup.string().min(6, 'No minimo 6 digitos'),
+
           password_confirm: Yup.string().min(6, 'No minimo 6 digitos'),
-          ddd: Yup.string().required('DDD do Telefone obrigatório'),
+
+          ddd: Yup.string().required('DDD do Telefone obrigatório').min(2,'Informe ao menos dois números'),
+
           telefone: Yup.string().required('Telefone obrigatório'),
+
           cep: Yup.string().required('CEP obrigatório'),
+
           logradouro: Yup.string().required('Logradouro obrigatório'),
+
           numero: Yup.string().required('Número obrigatório'),
+
           complemento: Yup.string().required('Complemento obrigatório'),
+
           uf: Yup.string().required('UF obrigatório'),
+
           cidade: Yup.string().required('Cidade obrigatório'),
+
           bairro: Yup.string().required('Bairro obrigatório'),
+
           municipio: Yup.string().required('Município obrigatório'),
+
           dddCelular: Yup.string().required('DDD do Celular obrigatório'),
+
           celular: Yup.string().required('Celular obrigatório'),
         });
 
@@ -98,12 +112,10 @@ const SignUp: React.FC = () => {
 
   return (
     <Container>
-      <Background />
       <Content>
         <AnimationContainer>
-          <img src={logoImg} alt="FaceIT" />
           <Form ref={formRef} onSubmit={handleSubmit}>
-            <h1>Faça seu cadastro</h1>
+            <h1>Atualize Seu Perfil</h1>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <Input
@@ -248,17 +260,13 @@ const SignUp: React.FC = () => {
             </Grid>
 
             <Button type="submit" tamanho={50}>
-              Cadastrar
+              Atualizar
             </Button>
           </Form>
-          <Link to="/">
-            <FiArrowLeft />
-            Voltar para logon
-          </Link>
         </AnimationContainer>
       </Content>
     </Container>
   );
 };
 
-export default SignUp;
+export default Perfil;
