@@ -12,6 +12,7 @@ import Button from '../../components/Button';
 import getValidationsErros from '../../utils/getValidationsErrors';
 import { useToast } from '../../hooks/Toast';
 import { Container, Content, AnimationContainer, Background } from './styles';
+import { useAuth } from '../../hooks/Auth';
 
 interface PerfilFormData {
   name: string;
@@ -35,6 +36,7 @@ interface PerfilFormData {
   celular: string;
 }
 const Perfil: React.FC = () => {
+  const { user } = useAuth();
   const formRef = useRef<FormHandles>(null);
   const { addToast } = useToast();
   const history = useHistory();
@@ -47,17 +49,25 @@ const Perfil: React.FC = () => {
 
           sobrenome: Yup.string().required('Sobrenome obrigatório'),
 
-          rg: Yup.string().required('RG obrigatório').min(12, 'RG Inválido. Corrija a quantidade de caracteres'),
-          
-          cpf: Yup.string().required('CPF obrigatório').min(14,'CPF Invalido. Corrija a quantidade de caracteres'),
+          rg: Yup.string()
+            .required('RG obrigatório')
+            .min(12, 'RG Inválido. Corrija a quantidade de caracteres'),
 
-          email: Yup.string().required('E-mail obrigatório').email('Digite um e-mail válido'),
+          cpf: Yup.string()
+            .required('CPF obrigatório')
+            .min(14, 'CPF Invalido. Corrija a quantidade de caracteres'),
+
+          email: Yup.string()
+            .required('E-mail obrigatório')
+            .email('Digite um e-mail válido'),
 
           password: Yup.string().min(6, 'No minimo 6 digitos'),
 
-          password_confirm: Yup.string().min(6, 'No minimo 6 digitos'),
+          passwordconfirm: Yup.string().min(6, 'No minimo 6 digitos'),
 
-          ddd: Yup.string().required('DDD do Telefone obrigatório').min(2,'Informe ao menos dois números'),
+          ddd: Yup.string()
+            .required('DDD do Telefone obrigatório')
+            .min(2, 'Informe ao menos dois números'),
 
           telefone: Yup.string().required('Telefone obrigatório'),
 
@@ -122,9 +132,9 @@ const Perfil: React.FC = () => {
                   name="name"
                   icon={FiUser}
                   type="text"
-                  placeholder="Nome"
-                
+                  placeholder={user.tipo === 'PJ' ? 'Nome' : 'Razão Social'}
                 />
+
                 <Input
                   name="sobrenome"
                   icon={FiUser}
@@ -139,7 +149,6 @@ const Perfil: React.FC = () => {
                   placeholder="RG"
                   maxLength={12}
                   tamanho={50}
-                  
                 />
                 <Input
                   name="cpf"
@@ -155,7 +164,7 @@ const Perfil: React.FC = () => {
                   type="text"
                   placeholder="E-mail"
                 />
-                 <Input
+                <Input
                   name="password"
                   icon={FiLock}
                   type="password"
@@ -164,7 +173,7 @@ const Perfil: React.FC = () => {
                   maxLength={20}
                 />
                 <Input
-                  name="password_confirm"
+                  name="passwordconfirm"
                   icon={FiLock}
                   type="password"
                   placeholder="Confirmar Senha"
@@ -177,7 +186,6 @@ const Perfil: React.FC = () => {
                   maxLength={3}
                   placeholder="DDD"
                   tamanho={30}
-                 
                 />
                 <Input
                   name="telefone"
