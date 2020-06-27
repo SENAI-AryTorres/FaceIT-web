@@ -1,5 +1,6 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
+import { RadioGroup, FormControlLabel, Radio } from '@material-ui/core';
 import { FiArrowLeft, FiMail, FiUser, FiLock } from 'react-icons/fi';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
@@ -16,6 +17,7 @@ import { useToast } from '../../hooks/Toast';
 import { Container, Content, AnimationContainer, Background } from './styles';
 
 interface SignUpFormData {
+  pfpj: string;
   name: string;
   sobrenome: string;
   rg: string;
@@ -38,8 +40,36 @@ interface SignUpFormData {
 }
 const SignUp: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
+  const [value, setValue] = useState('PF');
+
+  const [[name, sobrenome, RG, CPF], setPFPJ] = useState([
+    'Nome',
+    'Sobrenome',
+    'RG',
+    'CPF',
+  ]);
+
   const { addToast } = useToast();
   const history = useHistory();
+
+  const handleChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const valor = (event.target as HTMLInputElement).value;
+      setValue(valor);
+      if (valor === 'PF') {
+        setPFPJ(['Nome', 'Sobrenome', 'RG', 'CPF']);
+      } else {
+        setPFPJ([
+          'Razão Social',
+          'Nome Fantasia',
+          'Inscrição Estadual',
+          'CNPJ',
+        ]);
+      }
+    },
+    [],
+  );
+
   const handleSubmit = useCallback(
     async (data: SignUpFormData) => {
       try {
@@ -47,14 +77,26 @@ const SignUp: React.FC = () => {
         const schema = Yup.object().shape({
           name: Yup.string().required('Nome obrigatório'),
           sobrenome: Yup.string().required('Sobrenome obrigatório'),
-          rg: Yup.string().required('RG obrigatório').min(9, 'RG Inválido. Corrija a quantidade de caracteres'),     
-          cpf: Yup.string().required('CPF obrigatório').min(11,'CPF Invalido. Corrija a quantidade de caracteres'),
-          email: Yup.string().required('E-mail obrigatório').email('Digite um e-mail válido'),
+          rg: Yup.string()
+            .required('RG obrigatório')
+            .min(9, 'RG Inválido. Corrija a quantidade de caracteres'),
+          cpf: Yup.string()
+            .required('CPF obrigatório')
+            .min(11, 'CPF Invalido. Corrija a quantidade de caracteres'),
+          email: Yup.string()
+            .required('E-mail obrigatório')
+            .email('Digite um e-mail válido'),
           password: Yup.string().min(6, 'No minimo 6 digitos'),
-          password_confirm: Yup.string().min(6, 'No minimo 6 digitos'),
-          ddd: Yup.string().required('DDD do Telefone obrigatório').min(2,'Informe ao menos dois números'),
-          telefone: Yup.string().required('Telefone obrigatório').min(8,'Quantidade de caracteres inválida'),
-          cep: Yup.string().required('CEP obrigatório').min(8,'Quantidade de caracteres inválida'),
+          passwordconfirm: Yup.string().min(6, 'No minimo 6 digitos'),
+          ddd: Yup.string()
+            .required('DDD do Telefone obrigatório')
+            .min(2, 'Informe ao menos dois números'),
+          telefone: Yup.string()
+            .required('Telefone obrigatório')
+            .min(8, 'Quantidade de caracteres inválida'),
+          cep: Yup.string()
+            .required('CEP obrigatório')
+            .min(8, 'Quantidade de caracteres inválida'),
           logradouro: Yup.string().required('Logradouro obrigatório'),
           numero: Yup.string().required('Número obrigatório'),
           complemento: Yup.string().required('Complemento obrigatório'),
@@ -62,15 +104,92 @@ const SignUp: React.FC = () => {
           cidade: Yup.string().required('Cidade obrigatório'),
           bairro: Yup.string().required('Bairro obrigatório'),
           municipio: Yup.string().required('Município obrigatório'),
-          dddCelular: Yup.string().required('DDD do Celular obrigatório').min(2, 'DDD incorreto'),
-          celular: Yup.string().required('Celular obrigatório').min(9,'Quantidade de caracteres inválida'),
+          dddCelular: Yup.string()
+            .required('DDD do Celular obrigatório')
+            .min(2, 'DDD incorreto'),
+          celular: Yup.string()
+            .required('Celular obrigatório')
+            .min(9, 'Quantidade de caracteres inválida'),
         });
 
         await schema.validate(data, {
           abortEarly: false,
         });
 
-        await api.post('/users', data);
+        if (value === 'PF') {
+          const pessoaFisica = {
+            nome: data.name,
+            cpf: data.cpf,
+            rg: data.rg,
+            idPessoa: 0,
+            idPessoaNavigation: {
+              idPessoa: 0,
+              tipo: 'pf',
+              email: data.email,
+              senha: data.password,
+              excluido: false,
+              googleID: 0,
+              celular: data.dddCelular + data.celular,
+              telefone: data.ddd + data.telefone,
+              role: 'string',
+              endereco: {
+                cep: data.cep,
+                pais: 'Brasil',
+                uf: data.uf,
+                municipio: data.municipio,
+                logradouro: data.logradouro,
+                numero: data.numero,
+                complemento: data.complemento,
+                bairro: data.bairro,
+                idPessoa: 0,
+              },
+              // "imagem": {
+              //   "idPessoa": 0,
+              //   "nome": "string",
+              //   "bytes": "string"
+              // },
+            },
+          };
+
+          await api.post('/PessoaFisica', pessoaFisica);
+        } else {
+          const pessoaJuridica = {
+            razaoSocial: data.name,
+            nomeFantasia: data.sobrenome,
+            cnpj: data.cpf,
+            ie: data.rg,
+            idPessoa: 0,
+            idPessoaNavigation: {
+              idPessoa: 0,
+              tipo: 'pj',
+              email: data.email,
+              senha: data.password,
+              excluido: false,
+              googleID: 0,
+              celular: data.dddCelular + data.celular,
+              telefone: data.ddd + data.telefone,
+              role: 'string',
+              endereco: {
+                cep: data.cep,
+                pais: 'Brasil',
+                uf: data.uf,
+                municipio: data.municipio,
+                logradouro: data.logradouro,
+                numero: data.numero,
+                complemento: data.complemento,
+                bairro: data.bairro,
+                idPessoa: 0,
+              },
+              imagem: {
+                idPessoa: 0,
+                nome: 'string',
+                bytes: 'string',
+              },
+            },
+          };
+          await api.post('/PessoaJuridica', pessoaJuridica);
+        }
+
         history.push('/');
         addToast({
           type: 'success',
@@ -103,35 +222,53 @@ const SignUp: React.FC = () => {
           <Form ref={formRef} onSubmit={handleSubmit}>
             <h1>Faça seu cadastro</h1>
             <Grid container spacing={2}>
+              <Grid item xs={12} sm={12}>
+                <RadioGroup
+                  row
+                  aria-label="PFPJ"
+                  name="pfpj"
+                  value={value}
+                  onChange={handleChange}
+                >
+                  <FormControlLabel
+                    value="PF"
+                    control={<Radio />}
+                    label="Pessoa Física"
+                  />
+                  <FormControlLabel
+                    value="PJ"
+                    control={<Radio />}
+                    label="Pessoa Juridica"
+                  />
+                </RadioGroup>
+              </Grid>
               <Grid item xs={12} sm={6}>
                 <Input
                   name="name"
                   icon={FiUser}
                   type="text"
-                  placeholder="Nome"
-                
+                  placeholder={name}
                 />
                 <Input
                   name="sobrenome"
                   icon={FiUser}
                   type="text"
-                  placeholder="Sobrenome"
+                  placeholder={sobrenome}
                   maxLength={50}
                 />
                 <Input
                   name="rg"
                   icon={FiUser}
                   type="text"
-                  placeholder="RG"
+                  placeholder={RG}
                   maxLength={12}
                   tamanho={50}
-                  
                 />
                 <Input
                   name="cpf"
                   icon={FiUser}
                   type="text"
-                  placeholder="CPF"
+                  placeholder={CPF}
                   tamanho={50}
                   maxLength={14}
                 />
@@ -141,7 +278,7 @@ const SignUp: React.FC = () => {
                   type="text"
                   placeholder="E-mail"
                 />
-                 <Input
+                <Input
                   name="password"
                   icon={FiLock}
                   type="password"
@@ -150,7 +287,7 @@ const SignUp: React.FC = () => {
                   maxLength={20}
                 />
                 <Input
-                  name="password_confirm"
+                  name="passwordconfirm"
                   icon={FiLock}
                   type="password"
                   placeholder="Confirmar Senha"
@@ -163,7 +300,6 @@ const SignUp: React.FC = () => {
                   maxLength={3}
                   placeholder="DDD"
                   tamanho={30}
-                 
                 />
                 <Input
                   name="telefone"
