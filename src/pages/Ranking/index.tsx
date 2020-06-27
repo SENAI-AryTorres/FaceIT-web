@@ -1,0 +1,44 @@
+import React from 'react';
+import {Container,Content} from './styles';
+import {Pie} from 'react-chartjs-2';
+import Paper from '@material-ui/core/Paper';
+
+const data = {
+	labels: [
+    'Javascript',
+    'Java', 
+    'Python',
+    'PHP',
+    'C#',
+    'C++'
+	],
+	datasets: [{
+		data: [25,20,20,15,10,10],
+        backgroundColor:[
+          'rgba(255,99,132)',
+          'rgba(54,162,235)',
+          'rgba(255,206,86)',
+          'rgba(75,192,192)',
+          'rgba(153,102,255)',
+          'rgba(255,159,64)',
+          
+        ],
+	}]
+};
+const Ranking: React.FC = () =>{
+  return(
+    <Container>
+      <Content>
+      <Paper>
+      <h4 style={{alignItems:'center'}}>Linguagens de Programação (%)</h4>
+      <br/>
+        <Pie data={data} width={400} height={350} options={{ maintainAspectRatio: false }}/>
+        
+      </Paper>
+      </Content>
+    </Container>
+
+  );
+}
+
+export default Ranking;

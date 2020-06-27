@@ -13,6 +13,7 @@ const MenuLateral: React.FC = () => {
     { name: 'CV', label: 'CV', icon: 'assignment_ind' },
     { name: 'Vagas', label: 'Vagas', icon: 'find_in_page' },
     { name: 'Perfil', label: 'Pefil', icon: 'account_box' },
+
   ];
   return user ? (
     <Container>
