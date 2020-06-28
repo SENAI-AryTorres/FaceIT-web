@@ -3,37 +3,20 @@ import Grid from '@material-ui/core/Grid';
 import { FiArrowLeft, FiMail, FiUser, FiLock } from 'react-icons/fi';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
-
+import Select from '@material-ui/core/Select';
 import * as Yup from 'yup';
 import { Link, useHistory } from 'react-router-dom';
 import api from '../../services/api';
-import logoImg from '../../assets/logo.svg';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import getValidationsErros from '../../utils/getValidationsErrors';
 import { useToast } from '../../hooks/Toast';
-import { Container, Content, AnimationContainer} from './styles';
+import { Container, Content, AnimationContainer,Text} from './styles';
 
 interface VacancyFormData {
-  name: string;
-  sobrenome: string;
-  rg: string;
-  cpf: string;
-  email: string;
-  password: string;
-  password_confirm: string;
-  ddd: number;
-  telefone: string;
-  cep: string;
-  logradouro: string;
-  numero: string;
-  complemento: string;
-  uf: string;
-  cidade: string;
-  bairro: string;
-  municipio: string;
-  dddCelular: string;
-  celular: string;
+  descricao: string;
+  tipoContrato: string;
+ 
 }
 const Vacancy: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
@@ -44,25 +27,10 @@ const Vacancy: React.FC = () => {
       try {
         formRef.current?.setErrors({});
         const schema = Yup.object().shape({
-          name: Yup.string().required('Nome obrigatório'),
-          sobrenome: Yup.string().required('Sobrenome obrigatório'),
-          rg: Yup.string().required('RG obrigatório').min(9, 'RG Inválido. Corrija a quantidade de caracteres'),     
-          cpf: Yup.string().required('CPF obrigatório').min(11,'CPF Invalido. Corrija a quantidade de caracteres'),
-          email: Yup.string().required('E-mail obrigatório').email('Digite um e-mail válido'),
-          password: Yup.string().min(6, 'No minimo 6 digitos'),
-          password_confirm: Yup.string().min(6, 'No minimo 6 digitos'),
-          ddd: Yup.string().required('DDD do Telefone obrigatório').min(2,'Informe ao menos dois números'),
-          telefone: Yup.string().required('Telefone obrigatório').min(8,'Quantidade de caracteres inválida'),
-          cep: Yup.string().required('CEP obrigatório').min(8,'Quantidade de caracteres inválida'),
-          logradouro: Yup.string().required('Logradouro obrigatório'),
-          numero: Yup.string().required('Número obrigatório'),
-          complemento: Yup.string().required('Complemento obrigatório'),
-          uf: Yup.string().required('UF obrigatório').min(2, 'UF Inválido'),
-          cidade: Yup.string().required('Cidade obrigatório'),
-          bairro: Yup.string().required('Bairro obrigatório'),
-          municipio: Yup.string().required('Município obrigatório'),
-          dddCelular: Yup.string().required('DDD do Celular obrigatório').min(2, 'DDD incorreto'),
-          celular: Yup.string().required('Celular obrigatório').min(9,'Quantidade de caracteres inválida'),
+          descricao: Yup.string().required('Sobrenome obrigatório'),
+          tipoContrato: Yup.string().required('Tipo de Contrato obrigatório'),
+          // rg: Yup.string().required('RG obrigatório').min(9, 'RG Inválido. Corrija a quantidade de caracteres'),     
+          
         });
 
         await schema.validate(data, {
@@ -73,8 +41,8 @@ const Vacancy: React.FC = () => {
         history.push('/');
         addToast({
           type: 'success',
-          title: 'Vaga Cadastrada!',
-          description: 'Sua vaga fo icadastrada com sucesso',
+          title: 'Proposta Cadastrada!',
+          description: 'Sua proposta foi cadastrada com sucesso',
         });
 
       } catch (err) {
@@ -99,69 +67,27 @@ const Vacancy: React.FC = () => {
       <Content>
         <AnimationContainer>
           <Form ref={formRef} onSubmit={handleSubmit}>
-            <h1>Cadastre sua Vaga</h1>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <Input
-                  name="name"
-                  icon={FiUser}
-                  type="text"
-                  placeholder="Nome"
-                />
-                <Input
-                  name="sobrenome"
-                  icon={FiUser}
-                  type="text"
-                  placeholder="Sobrenome"
-                  maxLength={50}
-                />
-                <Input
-                  name="rg"
-                  icon={FiUser}
-                  type="text"
-                  placeholder="RG"
-                  maxLength={12}
-                  tamanho={50}
-                />
-                <Input
-                  name="cpf"
-                  icon={FiUser}
-                  type="text"
-                  placeholder="CPF"
-                  maxLength={12}
-                  tamanho={50}
-                  
-                />
-               
-              </Grid>
-              <Grid item xs={6}>
-                <Input name="cep" icon={FiUser} type="text" placeholder="CEP" />
-                <Input
-                  name="logradouro"
-                  icon={FiUser}
-                  type="text"
-                  placeholder="Logradouro"
-                />
-                <Input
-                  name="numero"
-                  icon={FiUser}
-                  type="text"
-                  placeholder="Número"
-                  tamanho={50}
-                  maxLength={8}
-                />
-                <Input
-                  name="complemento"
-                  icon={FiUser}
-                  type="text"
-                  placeholder="Complemento"
-                  tamanho={50}
-                  maxLength={50}
-                />
-              </Grid>
-            </Grid>
+            <h1>Cadastre sua Proposta</h1> 
 
-            <Button type="submit" tamanho={50}>
+                <Text
+                  maxLength={300}
+                  rows={4}
+                  name="descricao"
+                  placeholder="Descrição da vaga"
+                />
+
+                  <label htmlFor="select-contract" style={{color:'black', textAlign:'start'}}>Tipo de Contrato</label>
+                <Select id="select-contract" name="tipoContrato" style={{width:'98%',background:'#232129',color:'white',borderRadius:'5px',textAlign:'start',padding:'5px'}}>
+                    <option  defaultValue=''>Tipo de Contrato:</option>
+                    <option value="clt">CLT</option>
+                    <option value="freelancer">Freelancer</option>
+                 </Select>
+
+                
+
+              
+          
+            <Button type="submit">
               Cadastrar
             </Button>
           </Form>

@@ -1,10 +1,10 @@
 import React, { useCallback, useRef } from 'react';
 import Grid from '@material-ui/core/Grid';
-import { FiArrowLeft, FiMail, FiUser, FiLock } from 'react-icons/fi';
+import {FiMail, FiUser, FiLock } from 'react-icons/fi';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
-import { Link, useHistory } from 'react-router-dom';
+import {useHistory } from 'react-router-dom';
 import api from '../../services/api';
 import Input from '../../components/Input';
 import Button from '../../components/Button';

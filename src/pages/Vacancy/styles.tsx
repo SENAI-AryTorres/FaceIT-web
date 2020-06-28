@@ -1,6 +1,7 @@
 import styled, { keyframes } from 'styled-components';
 import { shade } from 'polished';
 
+
 export const Container = styled.div`
   height: 100vh;
   display: flex;
@@ -33,7 +34,7 @@ export const AnimationContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-image: linear-gradient(#1fadb0, white);
+  background-color:white;
   padding: 15px;
 
   animation: ${appearFromRight} 1s;
@@ -45,6 +46,7 @@ export const AnimationContainer = styled.div`
 
     h1 {
       margin-bottom: 24px;
+      color:black;
     }
 
     a {
@@ -80,3 +82,18 @@ export const AnimationContainer = styled.div`
     }
   }
 `;
+
+
+export const Text = styled.textarea`
+ height:100px;
+ max-height:100px;
+ width:98%;
+ max-width:100%;
+ background: #232129;
+ border-radius: 10px;
+ color:white;
+ font-size:16px;
+ padding: 16px;
+ padding-bottom:10px;
+
+;`
