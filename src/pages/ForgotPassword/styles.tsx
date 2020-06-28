@@ -1,15 +1,11 @@
 import styled, { keyframes } from 'styled-components';
 import { shade } from 'polished';
-import signInBackground from '../../assets/sign-in-background.jpeg';
+import signUpBackground from '../../assets/sign-up-background.jpeg';
 
 export const Container = styled.div`
   height: 100vh;
   display: flex;
-  width:auto;
   align-items: stretch;
-  justify-content:center;
-  padding-left:20px;
-  padding-right:20px;
 `;
 
 export const Content = styled.div`
@@ -18,27 +14,29 @@ export const Content = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
-  max-width: 700px;
-
+  max-width: 950px;
 `;
 
-
+const appearFromRight = keyframes`
+  from{
+    opacity:0;
+    transform: translateX(50px);
+  }
+  to{
+    opacity:1;
+    transform: translateX(0px);
+  }
+`;
 
 export const AnimationContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-image: linear-gradient(#1fadb0, white);
-  padding-bottom:5px;
-  margin:100px;
+
+  animation: ${appearFromRight} 1s;
 
   form {
-    margin: 80px 0;
-    width: 350px;
-    height:150px;
-    text-align: center;
-    padding:20px;
 
     h1 {
       margin-bottom: 24px;
@@ -54,6 +52,9 @@ export const AnimationContainer = styled.div`
       &:hover {
         color: ${shade(0.2, '#f4ede8')};
       }
+    }
+    svg {
+      max-width: 100px;
     }
   }
 
@@ -76,6 +77,7 @@ export const AnimationContainer = styled.div`
 `;
 
 export const Background = styled.div`
+  flex: 1;
+  background: url(${signUpBackground}) no-repeat center;
   background-size: cover;
-
 `;

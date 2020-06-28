@@ -21,11 +21,17 @@ export const AnimationContainer = styled.div`
 
 align-items: center;
 justify-content: center;
-padding-bottom:5px;
-margin:100px;
+margin:150px;
+background-color:black;
+padding:12px;
+text-align:center;
+width: 70%;
+top: 30%;
+
+
 
 form {
-  width: 100%;
+  width: 70%;
   height:150px;
   text-align: center;
 
@@ -73,3 +79,4 @@ export const Text = styled.div`
   font-weight:regular;
   color:#004080
 `;
+

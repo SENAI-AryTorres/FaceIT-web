@@ -65,32 +65,25 @@ const Vacancy: React.FC = () => {
   return (
     <Container>
       <Content>
-        <AnimationContainer>
-          <Form ref={formRef} onSubmit={handleSubmit}>
-            <h1>Cadastre sua Proposta</h1> 
+        <AnimationContainer style={{textAlign:'start'}}>
+         <Form ref={formRef} onSubmit={handleSubmit}>
+            <h1 style={{textAlign:'center'}}>Cadastre sua Proposta</h1> 
+              <Text maxLength={300} rows={4} name="descricao" placeholder="Descrição da vaga"/>
 
-                <Text
-                  maxLength={300}
-                  rows={4}
-                  name="descricao"
-                  placeholder="Descrição da vaga"
-                />
+                <label htmlFor="select-contract" style={{color:'white', textAlign:'start', paddingLeft:'5px'}}>Tipo de Contrato</label>
+              <Select 
+                id="select-contract" 
+                name="tipoContrato" 
+                style={{width:'98%',background:'#232129',color:'white',borderRadius:'5px',textAlign:'start',padding:'5px'}}>
 
-                  <label htmlFor="select-contract" style={{color:'black', textAlign:'start'}}>Tipo de Contrato</label>
-                <Select id="select-contract" name="tipoContrato" style={{width:'98%',background:'#232129',color:'white',borderRadius:'5px',textAlign:'start',padding:'5px'}}>
                     <option  defaultValue=''>Tipo de Contrato:</option>
                     <option value="clt">CLT</option>
                     <option value="freelancer">Freelancer</option>
-                 </Select>
-
-                
-
-              
-          
-            <Button type="submit">
-              Cadastrar
-            </Button>
-          </Form>
+              </Select>
+                <Button type="submit">
+                    Cadastrar
+                </Button> 
+         </Form>
         </AnimationContainer>
       </Content>
     </Container>
@@ -98,3 +91,5 @@ const Vacancy: React.FC = () => {
 };
 
 export default Vacancy;
+
+

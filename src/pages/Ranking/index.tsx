@@ -1,5 +1,5 @@
 import React from 'react';
-import {Container,Content} from './styles';
+import {Container,Content,AnimationContainer} from './styles';
 import {Pie} from 'react-chartjs-2';
 import Paper from '@material-ui/core/Paper';
 
@@ -29,12 +29,12 @@ const Ranking: React.FC = () =>{
   return(
     <Container>
       <Content>
-      <Paper>
+        <AnimationContainer> 
       <h4 style={{alignItems:'center'}}>Linguagens de Programação (%)</h4>
-      <br/>
-        <Pie data={data} width={400} height={350} options={{ maintainAspectRatio: false }}/>
-        
-      </Paper>
+     <div style={{width: '100%'}}>
+        <Pie data={data} width={600}  height={300} options={{ maintainAspectRatio: false }}/>
+        </div>
+      </AnimationContainer>
       </Content>
     </Container>
 
