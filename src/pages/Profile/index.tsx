@@ -11,7 +11,13 @@ import Button from '../../components/Button';
 
 import getValidationsErros from '../../utils/getValidationsErrors';
 import { useToast } from '../../hooks/Toast';
-import { Container, Content, AnimationContainer, Background } from './styles';
+import {
+  HeaderTitle,
+  Container,
+  DivLeft,
+  DivRight,
+  AnimationContainer,
+} from './styles';
 import { useAuth } from '../../hooks/Auth';
 
 interface PerfilFormData {
@@ -122,155 +128,181 @@ const Perfil: React.FC = () => {
   );
 
   return (
-    <AnimationContainer>
+    <>
       <Form ref={formRef} onSubmit={handleSubmit}>
-        <h1>Atualize Seu Perfil</h1>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={6}>
-            <Input
-              name="nome"
-              icon={FiUser}
-              type="text"
-              placeholder={user.tipo === 'PF' ? 'Nome' : 'Razão Social'}
-            />
+        <HeaderTitle>Meu Perfil</HeaderTitle>
+        <Container>
+          <DivLeft>
+            <img src="https://avatars3.githubusercontent.com/u/271936?s=460&u=8f17648ac23b3b7ceda9d0aafe1f492d937e3648&v=4" />
+            <div>
+              <span>Upload Foto</span>
+              <span>Remover Foto</span>
+            </div>
+          </DivLeft>
+          <DivRight>
+            <strong>Dados Pessoais</strong>
+            <span>
+              Para atualizar as informações preenche abaixoe e clique em salvar
+            </span>
+            <AnimationContainer>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <Input
+                    name="nome"
+                    icon={FiUser}
+                    type="text"
+                    placeholder={user.tipo === 'PF' ? 'Nome' : 'Razão Social'}
+                  />
 
-            <Input
-              name="sobrenome"
-              icon={FiUser}
-              type="text"
-              placeholder={user.tipo === 'PF' ? 'Sobrenome' : 'Nome Fantasia'}
-              maxLength={80}
-            />
-            <Input
-              name="rg"
-              icon={FiUser}
-              type="text"
-              placeholder={user.tipo === 'PF' ? 'RG' : 'CNPJ'}
-              maxLength={user.tipo === 'PF' ? 9 : 14}
-              tamanho={50}
-            />
-            <Input
-              name="cpf"
-              icon={FiUser}
-              type="text"
-              placeholder={user.tipo === 'PF' ? 'CPF' : 'Inscrição Estadual'}
-              maxLength={user.tipo === 'PF' ? 11 : 14}
-              tamanho={50}
-            />
-            <Input
-              name="email"
-              icon={FiMail}
-              type="text"
-              placeholder="E-mail"
-            />
-            <Input
-              name="password"
-              icon={FiLock}
-              type="password"
-              placeholder="Password"
-              tamanho={50}
-              maxLength={20}
-            />
-            <Input
-              name="password_confirm"
-              icon={FiLock}
-              type="password"
-              placeholder="Confirmar Senha"
-              tamanho={50}
-              maxLength={20}
-            />
-            <Input
-              name="ddd"
-              type="text"
-              maxLength={3}
-              placeholder="DDD"
-              tamanho={30}
-            />
-            <Input
-              name="telefone"
-              icon={FiLock}
-              type="text"
-              placeholder="Telefone"
-              tamanho={70}
-              maxLength={8}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <Input name="cep" icon={FiUser} type="text" placeholder="CEP" />
-            <Input
-              name="logradouro"
-              icon={FiUser}
-              type="text"
-              placeholder="Logradouro"
-            />
-            <Input
-              name="numero"
-              icon={FiUser}
-              type="text"
-              placeholder="Número"
-              tamanho={50}
-              maxLength={8}
-            />
-            <Input
-              name="complemento"
-              icon={FiUser}
-              type="text"
-              placeholder="Complemento"
-              tamanho={50}
-              maxLength={50}
-            />
-            <Input
-              name="uf"
-              icon={FiUser}
-              type="text"
-              placeholder="UF"
-              tamanho={50}
-              maxLength={2}
-            />
-            <Input
-              name="cidade"
-              icon={FiUser}
-              type="text"
-              placeholder="Cidade"
-              tamanho={50}
-            />
-            <Input
-              name="bairro"
-              icon={FiUser}
-              type="text"
-              placeholder="bairro"
-              tamanho={50}
-            />
-            <Input
-              name="municipio"
-              icon={FiUser}
-              type="text"
-              placeholder="Município"
-              tamanho={50}
-            />
-            <Input
-              name="dddCelular"
-              type="text"
-              placeholder="DDD "
-              tamanho={30}
-              maxLength={3}
-            />
-            <Input
-              name="celular"
-              icon={FiUser}
-              type="text"
-              placeholder="Celular"
-              tamanho={70}
-              maxLength={9}
-            />
-          </Grid>
-        </Grid>
+                  <Input
+                    name="sobrenome"
+                    icon={FiUser}
+                    type="text"
+                    placeholder={
+                      user.tipo === 'PF' ? 'Sobrenome' : 'Nome Fantasia'
+                    }
+                    maxLength={80}
+                  />
+                  <Input
+                    name="rg"
+                    icon={FiUser}
+                    type="text"
+                    placeholder={user.tipo === 'PF' ? 'RG' : 'CNPJ'}
+                    maxLength={user.tipo === 'PF' ? 9 : 14}
+                    tamanho={50}
+                  />
+                  <Input
+                    name="cpf"
+                    icon={FiUser}
+                    type="text"
+                    placeholder={
+                      user.tipo === 'PF' ? 'CPF' : 'Inscrição Estadual'
+                    }
+                    maxLength={user.tipo === 'PF' ? 11 : 14}
+                    tamanho={50}
+                  />
+                  <Input
+                    name="email"
+                    icon={FiMail}
+                    type="text"
+                    placeholder="E-mail"
+                  />
+                  <Input
+                    name="password"
+                    icon={FiLock}
+                    type="password"
+                    placeholder="Password"
+                    tamanho={50}
+                    maxLength={20}
+                  />
+                  <Input
+                    name="password_confirm"
+                    icon={FiLock}
+                    type="password"
+                    placeholder="Confirmar Senha"
+                    tamanho={50}
+                    maxLength={20}
+                  />
+                  <Input
+                    name="ddd"
+                    type="text"
+                    maxLength={3}
+                    placeholder="DDD"
+                    tamanho={30}
+                  />
+                  <Input
+                    name="telefone"
+                    icon={FiLock}
+                    type="text"
+                    placeholder="Telefone"
+                    tamanho={70}
+                    maxLength={8}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <Input
+                    name="cep"
+                    icon={FiUser}
+                    type="text"
+                    placeholder="CEP"
+                  />
+                  <Input
+                    name="logradouro"
+                    icon={FiUser}
+                    type="text"
+                    placeholder="Logradouro"
+                  />
+                  <Input
+                    name="numero"
+                    icon={FiUser}
+                    type="text"
+                    placeholder="Número"
+                    tamanho={50}
+                    maxLength={8}
+                  />
+                  <Input
+                    name="complemento"
+                    icon={FiUser}
+                    type="text"
+                    placeholder="Complemento"
+                    tamanho={50}
+                    maxLength={50}
+                  />
+                  <Input
+                    name="uf"
+                    icon={FiUser}
+                    type="text"
+                    placeholder="UF"
+                    tamanho={50}
+                    maxLength={2}
+                  />
+                  <Input
+                    name="cidade"
+                    icon={FiUser}
+                    type="text"
+                    placeholder="Cidade"
+                    tamanho={50}
+                  />
+                  <Input
+                    name="bairro"
+                    icon={FiUser}
+                    type="text"
+                    placeholder="bairro"
+                    tamanho={50}
+                  />
+                  <Input
+                    name="municipio"
+                    icon={FiUser}
+                    type="text"
+                    placeholder="Município"
+                    tamanho={50}
+                  />
+                  <Input
+                    name="dddCelular"
+                    type="text"
+                    placeholder="DDD "
+                    tamanho={30}
+                    maxLength={3}
+                  />
+                  <Input
+                    name="celular"
+                    icon={FiUser}
+                    type="text"
+                    placeholder="Celular"
+                    tamanho={70}
+                    maxLength={9}
+                  />
+                </Grid>
+              </Grid>
 
-        <Button type="submit" tamanho={50}>
-          Atualizar
-        </Button>
+              <Button type="submit" tamanho={50}>
+                Atualizar
+              </Button>
+            </AnimationContainer>
+          </DivRight>
+        </Container>
       </Form>
-    </AnimationContainer>
+    </>
   );
 };
 
