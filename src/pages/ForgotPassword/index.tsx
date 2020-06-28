@@ -39,10 +39,11 @@ const ForgotPassword: React.FC = () => {
           abortEarly: false,
         });
     
-        const email = {
+        const forgot = {
            email: data.email
         }
-        await api.post('/RecuperarSenha', data.email);
+
+        await api.post('/RecuperarSenha',forgot);
 
         history.push('/');
         addToast({
@@ -80,7 +81,7 @@ const ForgotPassword: React.FC = () => {
             <h1>Recuperar Senha</h1>
             
             <br/>
-            <Grid container spacing={2}>
+            <Grid container>
                 <Input
                   name="email"
                   icon={FiMail}
@@ -91,7 +92,7 @@ const ForgotPassword: React.FC = () => {
                 />
             </Grid>
             <br/>
-            <Button type="submit" tamanho={80}>
+            <Button type="submit" tamanho={100}>
               Enviar Email
             </Button>
           </Form>
