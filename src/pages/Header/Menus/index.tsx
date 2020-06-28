@@ -20,15 +20,8 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import { useAuth } from '../../../hooks/Auth';
 
+import { mainListItems } from './listItems'
 
-
-  const items = [
-    {
-      name: 'Dashboard',
-      label: 'Dashboard',
-      icon: 'dashboard',
-      pagina: '/profile',
-    },]
 
 const drawerWidth = 240;
 
@@ -112,6 +105,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Dashboard() {
+  const { user } = useAuth();
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const handleDrawerOpen = () => {
@@ -122,7 +116,7 @@ export default function Dashboard() {
   };
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
-  return (
+  return user ? (
     <div className={classes.root}>
       <CssBaseline />
       <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
@@ -139,11 +133,7 @@ export default function Dashboard() {
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
             Dashboard
           </Typography>
-          <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
+
         </Toolbar>
       </AppBar>
       <Drawer
@@ -159,12 +149,12 @@ export default function Dashboard() {
           </IconButton>
         </div>
         <Divider />
-       
+        <List>{mainListItems}</List>
         <Divider />
        
       </Drawer>
      
   
     </div>
-  );
+  ) : null;
 }

@@ -310,7 +310,7 @@ const SignUp: React.FC = () => {
                   maxLength={8}
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6}>
                 <Input name="cep" icon={FiUser} type="text" placeholder="CEP" />
                 <Input
                   name="logradouro"

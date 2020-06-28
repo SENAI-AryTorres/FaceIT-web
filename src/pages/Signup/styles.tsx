@@ -6,6 +6,7 @@ export const Container = styled.div`
   height: 100vh;
   display: flex;
   align-items: stretch;
+  min-width: 360px;
 `;
 
 export const Content = styled.div`
@@ -38,7 +39,7 @@ export const AnimationContainer = styled.div`
 
   form {
     margin: 8px 0;
-    width: 850px;
+
     text-align: center;
 
     h1 {
