@@ -1,4 +1,4 @@
-import React from 'react';          
+import React from 'react';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -13,59 +13,64 @@ import { Link } from 'react-router-dom';
 
 export const mainListItems = (
   <div>
-    <ListItem button  component={Link} to='/dashboard'>
+    <ListItem button component={Link} to="/dashboard">
       <ListItemIcon>
         <DashboardIcon />
       </ListItemIcon>
       <ListItemText primary="Dashboard" />
     </ListItem>
-    <ListItem button>
+    <ListItem button component={Link} to="/ranking">
       <ListItemIcon>
         <ShoppingCartIcon />
       </ListItemIcon>
-      <ListItemText primary="Orders" />
+      <ListItemText primary="Ranking" />
     </ListItem>
-    <ListItem button>
+    <ListItem button component={Link} to="/profile">
       <ListItemIcon>
         <PeopleIcon />
       </ListItemIcon>
-      <ListItemText primary="Customers" />
+      <ListItemText primary="Meu Perfil" />
     </ListItem>
-    <ListItem button>
+    <ListItem button component={Link} to="/faq">
       <ListItemIcon>
         <BarChartIcon />
       </ListItemIcon>
-      <ListItemText primary="teste11111111" />
-    </ListItem>
-    <ListItem button component={Link} to='/profile'>
-      <ListItemIcon>
-        <LayersIcon />
-      </ListItemIcon>
-      <ListItemText primary="Perfil" />
+      <ListItemText primary="FAQ" />
     </ListItem>
   </div>
 );
 
 export const secondaryListItems = (
   <div>
-    <ListSubheader inset>Saved reports</ListSubheader>
-    <ListItem button>
+    <ListItem button component={Link} to="/dashboard">
       <ListItemIcon>
-        <AssignmentIcon />
+        <DashboardIcon />
       </ListItemIcon>
-      <ListItemText primary="Current month" />
+      <ListItemText primary="Dashboard" />
     </ListItem>
-    <ListItem button>
+    <ListItem button component={Link} to="/ranking">
       <ListItemIcon>
-        <AssignmentIcon />
+        <ShoppingCartIcon />
       </ListItemIcon>
-      <ListItemText primary="Last quarter" />
+      <ListItemText primary="Criar Proposta" />
     </ListItem>
-    <ListItem button>
+    <ListItem button component={Link} to="/vacancy">
       <ListItemIcon>
-        <AssignmentIcon />
+        <PeopleIcon />
       </ListItemIcon>
-      <ListItemText primary="Year-end sale" />
+      <ListItemText primary="Meu Perfil" />
+    </ListItem>
+    <ListItem button component={Link} to="/ranking">
+      <ListItemIcon>
+        <BarChartIcon />
+      </ListItemIcon>
+      <ListItemText primary="Ranking" />
+    </ListItem>
+    <ListItem button component={Link} to="/faq">
+      <ListItemIcon>
+        <BarChartIcon />
+      </ListItemIcon>
+      <ListItemText primary="FAQ" />
     </ListItem>
   </div>
 );
