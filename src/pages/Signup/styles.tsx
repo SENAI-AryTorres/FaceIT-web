@@ -6,7 +6,6 @@ export const Container = styled.div`
   height: 100vh;
   display: flex;
   align-items: stretch;
-  min-width: 360px;
 `;
 
 export const Content = styled.div`
@@ -34,14 +33,12 @@ export const AnimationContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
+  text-align:center;
+  padding:10px;
   animation: ${appearFromRight} 1s;
 
   form {
-    margin: 8px 0;
-
-    text-align: center;
-
+   width:100%;
     h1 {
       margin-bottom: 24px;
     }

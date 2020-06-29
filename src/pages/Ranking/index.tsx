@@ -30,7 +30,7 @@ const Ranking: React.FC = () =>{
     <Container>
       <Content>
         <AnimationContainer> 
-      <h4 style={{alignItems:'center'}}>Linguagens de Programação (%)</h4>
+      <h4 style={{alignItems:'center', color:'white'}}>Linguagens de Programação (%)</h4>
      <div style={{width: '100%'}}>
         <Pie data={data} width={600}  height={300} options={{ maintainAspectRatio: false }}/>
         </div>

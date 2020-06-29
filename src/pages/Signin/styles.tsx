@@ -38,9 +38,9 @@ export const AnimationContainer = styled.div`
   animation: ${appearFromLeft} 1s;
 
   form {
-    margin: 80px 0;
-    width: 340px;
+    width: 300px;
     text-align: center;
+    padding:10px;
 
     h1 {
       margin-bottom: 24px;
@@ -72,7 +72,7 @@ export const AnimationContainer = styled.div`
     }
 
     svg {
-      margin-right: 16px;
+      margin-right: 20px;
     }
   }
 `;

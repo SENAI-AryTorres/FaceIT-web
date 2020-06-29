@@ -24,7 +24,7 @@ justify-content: center;
 margin:150px;
 background-color:black;
 padding:12px;
-text-align:center;
+text-align:start;
 width: 70%;
 top: 30%;
 

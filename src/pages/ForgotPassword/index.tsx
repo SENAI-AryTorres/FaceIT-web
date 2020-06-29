@@ -18,6 +18,7 @@ import { Container, Content, AnimationContainer, Background } from './styles';
 
 interface ForgotPasswordFormData {
   email: string;
+  role:string;
 
 }
 const ForgotPassword: React.FC = () => {
@@ -40,7 +41,8 @@ const ForgotPassword: React.FC = () => {
         });
     
         const forgot = {
-           email: data.email
+           email: data.email,
+           role: 'user'
         }
 
         await api.post('/RecuperarSenha',forgot);
@@ -64,7 +66,7 @@ const ForgotPassword: React.FC = () => {
         addToast({
           type: 'error',
           title: 'Erro na autenticação',
-          description: 'Ocorreu um erro ao fazer login, cheque as credenciais',
+          description: 'Ocorreu um erro ao recuperar a Senha, cheque as credenciais',
         });
       }
     },

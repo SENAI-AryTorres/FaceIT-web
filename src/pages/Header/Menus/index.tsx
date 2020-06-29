@@ -3,7 +3,8 @@ import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
-
+import Badge from '@material-ui/core/Badge';
+import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
@@ -87,15 +88,7 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: theme.spacing(4),
     paddingBottom: theme.spacing(4),
   },
-  paper: {
-    padding: theme.spacing(2),
-    display: 'flex',
-    overflow: 'auto',
-    flexDirection: 'column',
-  },
-  fixedHeight: {
-    height: 240,
-  },
+
 }));
 
 const Dashboard: React.FC = () => {
@@ -108,6 +101,14 @@ const Dashboard: React.FC = () => {
   const handleDrawerClose = (): void => {
     setOpen(false);
   };
+
+  
+
+  const handleClick =() => {
+    localStorage.removeItem('FaceIT:user');
+    localStorage.removeItem('FaceIT:token');
+    window.setTimeout(document.location.reload(), 1000);
+  }
   // const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
   return user ? (
@@ -137,8 +138,11 @@ const Dashboard: React.FC = () => {
             noWrap
             className={classes.title}
           >
-            Dashboard
+            {user.tipo === 'PF' ? "Pessoa Física" : "Pessoa Jurídica" }
           </Typography>
+          <IconButton color="inherit">
+              <PowerSettingsNewIcon onClick={handleClick} />
+          </IconButton>
         </Toolbar>
       </AppBar>
       <Drawer

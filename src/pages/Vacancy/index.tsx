@@ -37,7 +37,7 @@ const Vacancy: React.FC = () => {
           abortEarly: false,
         });
 
-        await api.post('/users', data);
+        await api.post('/proposta', data);
         history.push('/');
         addToast({
           type: 'success',
@@ -67,7 +67,7 @@ const Vacancy: React.FC = () => {
       <Content>
         <AnimationContainer style={{textAlign:'start'}}>
          <Form ref={formRef} onSubmit={handleSubmit}>
-            <h1 style={{textAlign:'center'}}>Cadastre sua Proposta</h1> 
+            <h1 style={{textAlign:'center', color:'white'}}>Cadastre sua Proposta</h1> 
               <Text maxLength={300} rows={4} name="descricao" placeholder="Descrição da vaga"/>
 
                 <label htmlFor="select-contract" style={{color:'white', textAlign:'start', paddingLeft:'5px'}}>Tipo de Contrato</label>

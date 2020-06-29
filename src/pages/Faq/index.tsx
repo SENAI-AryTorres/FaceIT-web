@@ -15,7 +15,7 @@ const Faq: React.FC = () => {
     <Container>
      <Content>
        <AnimationContainer>
-       <h1>Perguntas Frequentes</h1>
+       <h1 style={{color:'white',textAlign:'center'}}>Perguntas Frequentes</h1>
        <br/>  
        <ExpansionPanel>
         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
