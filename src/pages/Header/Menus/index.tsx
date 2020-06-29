@@ -88,7 +88,6 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: theme.spacing(4),
     paddingBottom: theme.spacing(4),
   },
-
 }));
 
 const Dashboard: React.FC = () => {
@@ -102,13 +101,11 @@ const Dashboard: React.FC = () => {
     setOpen(false);
   };
 
-  
-
-  const handleClick =() => {
+  const handleClick = () => {
     localStorage.removeItem('FaceIT:user');
     localStorage.removeItem('FaceIT:token');
     window.setTimeout(document.location.reload(), 1000);
-  }
+  };
   // const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
   return user ? (
@@ -138,10 +135,10 @@ const Dashboard: React.FC = () => {
             noWrap
             className={classes.title}
           >
-            {user.tipo === 'PF' ? "Pessoa Física" : "Pessoa Jurídica" }
+            {user.tipo === 'PF' ? 'Pessoa Física' : 'Pessoa Jurídica'}
           </Typography>
           <IconButton color="inherit">
-              <PowerSettingsNewIcon onClick={handleClick} />
+            <PowerSettingsNewIcon onClick={handleClick} />
           </IconButton>
         </Toolbar>
       </AppBar>

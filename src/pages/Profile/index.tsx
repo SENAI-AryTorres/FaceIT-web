@@ -1,4 +1,10 @@
-import React, { useCallback, useRef, ChangeEvent } from 'react';
+import React, {
+  useCallback,
+  useRef,
+  ChangeEvent,
+  useEffect,
+  useState,
+} from 'react';
 import Grid from '@material-ui/core/Grid';
 import { FiMail, FiUser, FiLock, FiCamera } from 'react-icons/fi';
 import { Form } from '@unform/web';
@@ -35,12 +41,31 @@ interface PerfilFormData {
   dddCelular: string;
   celular: string;
 }
+interface Skills {
+  idSkill: string;
+  descricao: string;
+}
 const Perfil: React.FC = () => {
   const { user, token } = useAuth();
   const formRef = useRef<FormHandles>(null);
   const { addToast } = useToast();
   const history = useHistory();
+  const [skillRetorno, setSkills] = useState<Partial<Skills[]>>([
+    {} as Partial<Skills[]>,
+  ]);
 
+  useEffect(() => {
+    // Carrega os dados do drop down
+    api.get(`/skill`).then((res) => {
+      const skills = res.data;
+      if (skills) {
+        setSkills(skills);
+      }
+      setSkills(res.data);
+      console.log(res.data);
+      // this.setState({ skills });
+    });
+  }, []);
   const handleAvatarChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       if (e.target.files) {

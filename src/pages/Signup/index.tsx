@@ -50,6 +50,7 @@ const SignUp: React.FC = () => {
   ]);
 
   const { addToast } = useToast();
+
   const history = useHistory();
 
   const handleChange = useCallback(

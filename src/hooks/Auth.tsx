@@ -14,7 +14,25 @@ interface SignInCredentials {
 interface UserObject {
   name: string;
   tipo: string;
-  idPessoa: number;
+  nome: string;
+  cpf: string;
+  rg: string;
+  idPessoa: string;
+  email: string;
+  senha: string;
+  excluido: string;
+  googleID: string;
+  celular: string;
+  telefone: string;
+  role: string;
+  cep: string;
+  pais: string;
+  uf: string;
+  municipio: string;
+  logradouro: string;
+  numero: string;
+  complemento: string;
+  bairro: string;
 }
 
 interface AuthContextData {
