@@ -132,7 +132,7 @@ const SignUp: React.FC = () => {
               googleID: 0,
               celular: data.dddCelular + data.celular,
               telefone: data.ddd + data.telefone,
-              role: 'string',
+              role: 'user',
               endereco: {
                 cep: data.cep,
                 pais: 'Brasil',
@@ -169,7 +169,7 @@ const SignUp: React.FC = () => {
               googleID: 0,
               celular: data.dddCelular + data.celular,
               telefone: data.ddd + data.telefone,
-              role: 'string',
+              role: 'user',
               endereco: {
                 cep: data.cep,
                 pais: 'Brasil',

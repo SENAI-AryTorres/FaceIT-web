@@ -40,12 +40,9 @@ const ForgotPassword: React.FC = () => {
           abortEarly: false,
         });
     
-        const forgot = {
-           email: data.email,
-           role: 'user'
-        }
+       
 
-        await api.post('/RecuperarSenha',forgot);
+        await api.post('/RecuperarSenha',data.email.toString());
 
         history.push('/');
         addToast({

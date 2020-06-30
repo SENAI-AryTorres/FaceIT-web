@@ -8,7 +8,7 @@ interface AuthState {
 
 interface SignInCredentials {
   email: string;
-  password: string;
+  senha: string;
 }
 
 interface UserObject {
@@ -56,8 +56,8 @@ const AuthProvider: React.FC = ({ children }) => {
     return {} as AuthState;
   });
 
-  const signIn = useCallback(async ({ email, password }) => {
-    const response = await api.post('login', { email, password, googleId: 0 });
+  const signIn = useCallback(async ({ email, senha }) => {
+    const response = await api.post('login', { email, senha, googleId: 0 });
 
     const user = response.data.pessoa;
     const token = response.data.token.value;
