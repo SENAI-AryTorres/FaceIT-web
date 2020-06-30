@@ -18,8 +18,7 @@ import { Container, Content, AnimationContainer, Background } from './styles';
 
 interface ForgotPasswordFormData {
   email: string;
-  role:string;
-
+  role: string;
 }
 const ForgotPassword: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
@@ -27,7 +26,7 @@ const ForgotPassword: React.FC = () => {
   const history = useHistory();
 
   const handleSubmit = useCallback(
-    async (data:ForgotPasswordFormData) => {
+    async (data: ForgotPasswordFormData) => {
       try {
         formRef.current?.setErrors({});
         const schema = Yup.object().shape({
@@ -39,21 +38,22 @@ const ForgotPassword: React.FC = () => {
         await schema.validate(data, {
           abortEarly: false,
         });
-    
-       
-
-        await api.post('/RecuperarSenha',data.email.toString());
+        const config = {
+          headers: {
+            'Content-Type': 'text/json',
+            // Authorization: `Bearer ${token}`,
+          },
+        };
+        await api.post('/RecuperarSenha', `'${data.email.toString()}'`, config);
 
         history.push('/');
         addToast({
           type: 'success',
           title: 'Email Enviado!',
-          description: 'Um email com uma nova senha foi enviado para o endereço selecionado!',
+          description:
+            'Um email com uma nova senha foi enviado para o endereço selecionado!',
         });
-      
-      } 
-      
-      catch (err) {
+      } catch (err) {
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationsErros(err);
 
@@ -63,7 +63,8 @@ const ForgotPassword: React.FC = () => {
         addToast({
           type: 'error',
           title: 'Erro na autenticação',
-          description: 'Ocorreu um erro ao recuperar a Senha, cheque as credenciais',
+          description:
+            'Ocorreu um erro ao recuperar a Senha, cheque as credenciais',
         });
       }
     },
@@ -78,19 +79,18 @@ const ForgotPassword: React.FC = () => {
           <img src={logoImg} alt="FaceIT" />
           <Form ref={formRef} onSubmit={handleSubmit}>
             <h1>Recuperar Senha</h1>
-            
-            <br/>
+
+            <br />
             <Grid container>
-                <Input
-                  name="email"
-                  icon={FiMail}
-                  type="text"
-                  style={{display:'inline-block', position:'relative'}}
-                  placeholder="E-mail"
-                 
-                />
+              <Input
+                name="email"
+                icon={FiMail}
+                type="text"
+                style={{ display: 'inline-block', position: 'relative' }}
+                placeholder="E-mail"
+              />
             </Grid>
-            <br/>
+            <br />
             <Button type="submit" tamanho={100}>
               Enviar Email
             </Button>
