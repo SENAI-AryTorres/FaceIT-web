@@ -7,10 +7,26 @@ import React, {
 } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { FiMail, FiUser, FiLock, FiCamera } from 'react-icons/fi';
+import {
+  Input as InputMaterialCore,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Checkbox,
+  ListItemText,
+  Select,
+} from '@material-ui/core';
+import {
+  createStyles,
+  makeStyles,
+  useTheme,
+  Theme,
+} from '@material-ui/core/styles';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
 import { useHistory } from 'react-router-dom';
+
 import api from '../../services/api';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
@@ -20,6 +36,36 @@ import { useToast } from '../../hooks/Toast';
 import { Container, Content, AvatarInput } from './styles';
 import { useAuth } from '../../hooks/Auth';
 
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    formControl: {
+      margin: theme.spacing(1),
+      minWidth: 120,
+      maxWidth: 300,
+    },
+    chips: {
+      display: 'flex',
+      flexWrap: 'wrap',
+    },
+    chip: {
+      margin: 2,
+    },
+    noLabel: {
+      marginTop: theme.spacing(3),
+    },
+  }),
+);
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
 interface PerfilFormData {
   name: string;
   sobrenome: string;
@@ -41,31 +87,50 @@ interface PerfilFormData {
   dddCelular: string;
   celular: string;
 }
-interface Skills {
-  idSkill: string;
+interface SkillItem {
   descricao: string;
+  idSkill: number;
+  idTipoSkill: number;
+}
+
+interface Skills {
+  array: SkillItem[];
 }
 const Perfil: React.FC = () => {
+  const classes = useStyles();
+  const theme = useTheme();
   const { user, token } = useAuth();
   const formRef = useRef<FormHandles>(null);
   const { addToast } = useToast();
   const history = useHistory();
-  const [skillRetorno, setSkills] = useState<Partial<Skills[]>>([
-    {} as Partial<Skills[]>,
-  ]);
+  const [skillRetorno, setSkills] = useState<SkillItem[]>([]);
 
   useEffect(() => {
     // Carrega os dados do drop down
     api.get(`/skill`).then((res) => {
-      const skills = res.data;
-      if (skills) {
-        setSkills(skills);
-      }
-      setSkills(res.data);
-      console.log(res.data);
+      const skills: SkillItem[] = res.data;
+      setSkills(skills);
       // this.setState({ skills });
     });
   }, []);
+
+  const [userSkill, setSkillUser] = useState<string[]>(['C#', 'SQL Server']);
+
+  const handleChange = (event: ChangeEvent<{ value: unknown }>) => {
+    setSkillUser(event.target.value as string[]);
+  };
+
+  const handleChangeMultiple = (event: ChangeEvent<{ value: unknown }>) => {
+    const { options } = event.target as HTMLSelectElement;
+    const value: string[] = [];
+    for (let i = 0, l = options.length; i < l; i += 1) {
+      if (options[i].selected) {
+        value.push(options[i].value);
+      }
+    }
+    setSkillUser(value);
+  };
+
   const handleAvatarChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       if (e.target.files) {
@@ -176,7 +241,12 @@ const Perfil: React.FC = () => {
     <>
       <Container>
         <Content>
-          <strong>Dados Pessoais</strong>
+          <strong>
+            {skillRetorno.map((s) => (
+              <li key={s?.idSkill}>{s?.descricao}</li>
+            ))}
+            Dados Pessoais
+          </strong>
           <span>
             Para atualizar as informações preenche abaixoe e clique em salvar
           </span>
@@ -339,6 +409,30 @@ const Perfil: React.FC = () => {
                   tamanho={70}
                   maxLength={9}
                 />
+
+                <FormControl>
+                  <InputLabel id="demo-mutiple-checkbox-label">Tag</InputLabel>
+                  <Select
+                    labelId="demo-mutiple-checkbox-label"
+                    id="demo-mutiple-checkbox"
+                    multiple
+                    value={userSkill}
+                    onChange={handleChange}
+                    input={<InputMaterialCore />}
+                    renderValue={(selected) =>
+                      (selected as string[]).join(', ')}
+                    MenuProps={MenuProps}
+                  >
+                    {skillRetorno.map((s) => (
+                      <MenuItem key={s?.idSkill} value={s?.descricao}>
+                        <Checkbox
+                          checked={userSkill.indexOf(s.descricao) > -1}
+                        />
+                        <ListItemText primary={s?.descricao} />
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </Grid>
             </Grid>
 
