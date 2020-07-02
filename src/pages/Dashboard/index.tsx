@@ -18,6 +18,9 @@ const Dashboard: React.FC = () =>{
   const [propostaRetorno, setPropostas] = useState<PropostaItem[]>([]);
  
   useEffect(() => {
+    const config = {
+             headers: { Authorization: `Bearer ${token}` }
+           };
     // Carrega os dados do drop down
     api.get(`/proposta`,config)
     .then((res) => {
@@ -27,20 +30,29 @@ const Dashboard: React.FC = () =>{
   }, []);
 
 
+  // useEffect(() => {
+  //   (async () => {
+  //     const config = {
+  //       headers: { Authorization: `Bearer ${token}` }
+  //     };
+  //    const proposta = await api.get(`/proposta`,config);
+  //    setPropostas(proposta.data);
+  //   })();
+  //  }, []);
 
-  const config = {
-    headers: { Authorization: `Bearer ${token}` }
-  };
+
+
+ 
  
 
 
     return(
       <div>
-      {propostaRetorno.map((s)=>{
+      {propostaRetorno.map((s)=>(
         <li key={s.idProposta}>
           {s.descricao}
         </li>
-      })}
+      ))}
        
       </div>
      
