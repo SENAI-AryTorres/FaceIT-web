@@ -1,40 +1,20 @@
-import React, {
-  useCallback,
-  useRef,
-  ChangeEvent,
-  useEffect,
-  useState,
-} from 'react';
+import React, {useCallback,useRef,ChangeEvent,useEffect,useState,} from 'react';
 import Grid from '@material-ui/core/Grid';
 import { FiMail, FiUser, FiLock, FiCamera } from 'react-icons/fi';
-import {
-  Input as InputMaterialCore,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Checkbox,
-  ListItemText,
-  Select,
-} from '@material-ui/core';
-import {
-  createStyles,
-  makeStyles,
-  useTheme,
-  Theme,
-} from '@material-ui/core/styles';
+import {Input as InputMaterialCore,FormControl,InputLabel,MenuItem,Checkbox,ListItemText,Select,} from '@material-ui/core';
+import {createStyles,makeStyles,useTheme,Theme} from '@material-ui/core/styles';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
 import { useHistory } from 'react-router-dom';
-
 import api from '../../services/api';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
-
 import getValidationsErros from '../../utils/getValidationsErrors';
 import { useToast } from '../../hooks/Toast';
-import { Container, Content, AvatarInput } from './styles';
+import { Container, Content, AvatarInput} from './styles';
 import { useAuth } from '../../hooks/Auth';
+import '../../styles/global.css';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -239,16 +219,15 @@ const Perfil: React.FC = () => {
 
   return (
     <>
+    <br/>
+    <br/>
+    <br/>
+   
+    
       <Container>
         <Content>
-          <strong>
-            {skillRetorno.map((s) => (
-              <li key={s?.idSkill}>{s?.descricao}</li>
-            ))}
-            Dados Pessoais
-          </strong>
           <span>
-            Para atualizar as informações preenche abaixoe e clique em salvar
+            Para atualizar as informações preencha abaixo e e clique em salvar
           </span>
           <Form ref={formRef} onSubmit={handleSubmit}>
             <Grid container spacing={2}>
@@ -267,6 +246,7 @@ const Perfil: React.FC = () => {
                     />
                   </label>
                 </AvatarInput>
+              
               </Grid>
               <Grid item xs={12} sm={5}>
                 <Input
@@ -342,7 +322,13 @@ const Perfil: React.FC = () => {
                 />
               </Grid>
               <Grid item xs={12} sm={5}>
-                <Input name="cep" icon={FiUser} type="text" placeholder="CEP" />
+                <Input 
+                name="cep" 
+                icon={FiUser} 
+                type="text" 
+                placeholder="CEP" 
+                maxLength={8}/>
+
                 <Input
                   name="logradouro"
                   icon={FiUser}
@@ -409,10 +395,11 @@ const Perfil: React.FC = () => {
                   tamanho={70}
                   maxLength={9}
                 />
-
-                <FormControl>
-                  <InputLabel id="demo-mutiple-checkbox-label">Tag</InputLabel>
-                  <Select
+              </Grid>
+              <Grid item xs={12} sm={12}>
+            <FormControl>
+                  <InputLabel id="demo-mutiple-checkbox-label">Skills</InputLabel>
+                  <Select className="select-multi" 
                     labelId="demo-mutiple-checkbox-label"
                     id="demo-mutiple-checkbox"
                     multiple
@@ -433,9 +420,9 @@ const Perfil: React.FC = () => {
                     ))}
                   </Select>
                 </FormControl>
-              </Grid>
+                </Grid>
             </Grid>
-
+            
             <Button type="submit" tamanho={25}>
               Atualizar
             </Button>

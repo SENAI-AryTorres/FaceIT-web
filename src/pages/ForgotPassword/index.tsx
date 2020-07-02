@@ -18,7 +18,6 @@ import { Container, Content, AnimationContainer, Background } from './styles';
 
 interface ForgotPasswordFormData {
   email: string;
-  role: string;
 }
 const ForgotPassword: React.FC = () => {
   const formRef = useRef<FormHandles>(null);

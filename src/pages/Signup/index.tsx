@@ -125,7 +125,7 @@ const SignUp: React.FC = () => {
             idPessoa: 0,
             idPessoaNavigation: {
               idPessoa: 0,
-              tipo: 'pf',
+              tipo: 'PF',
               email: data.email,
               senha: data.password,
               excluido: false,
@@ -153,8 +153,10 @@ const SignUp: React.FC = () => {
           };
 
           await api.post('/PessoaFisica', pessoaFisica);
-        } else {
-          const pessoaJuridica = {
+        } 
+        
+          else {
+           const pessoaJuridica = {
             razaoSocial: data.name,
             nomeFantasia: data.sobrenome,
             cnpj: data.cpf,
@@ -162,7 +164,7 @@ const SignUp: React.FC = () => {
             idPessoa: 0,
             idPessoaNavigation: {
               idPessoa: 0,
-              tipo: 'pj',
+              tipo: 'PJ',
               email: data.email,
               senha: data.password,
               excluido: false,
@@ -311,7 +313,12 @@ const SignUp: React.FC = () => {
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <Input name="cep" icon={FiUser} type="text" placeholder="CEP" />
+                <Input 
+                 name="cep"  
+                 icon={FiUser} 
+                 type="text" 
+                 placeholder="CEP" />
+                 
                 <Input
                   name="logradouro"
                   icon={FiUser}
