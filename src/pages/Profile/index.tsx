@@ -403,6 +403,7 @@ const Perfil: React.FC = () => {
                     labelId="demo-mutiple-checkbox-label"
                     id="demo-mutiple-checkbox"
                     multiple
+                    variant='outlined'
                     value={userSkill}
                     onChange={handleChange}
                     input={<InputMaterialCore />}

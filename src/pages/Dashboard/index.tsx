@@ -14,7 +14,7 @@ interface PropostaItem {
 
 
 const Dashboard: React.FC = () =>{
-  const token = useAuth();
+  const token = localStorage.getItem('FaceIT:token');
   const [propostaRetorno, setPropostas] = useState<PropostaItem[]>([]);
  
   useEffect(() => {
@@ -29,29 +29,12 @@ const Dashboard: React.FC = () =>{
     });
   }, []);
 
-
-  // useEffect(() => {
-  //   (async () => {
-  //     const config = {
-  //       headers: { Authorization: `Bearer ${token}` }
-  //     };
-  //    const proposta = await api.get(`/proposta`,config);
-  //    setPropostas(proposta.data);
-  //   })();
-  //  }, []);
-
-
-
- 
- 
-
-
     return(
       <div>
       {propostaRetorno.map((s)=>(
-        <li key={s.idProposta}>
+        <Card key={s.idProposta}>
           {s.descricao}
-        </li>
+        </Card>
       ))}
        
       </div>
