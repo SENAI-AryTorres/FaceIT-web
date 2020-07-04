@@ -5,23 +5,21 @@ import { Card, Grid, Button } from '@material-ui/core';
 import Icon from '@material-ui/core/Icon';
 interface PropostaItem {
   descricao: string;
-  idProposta:string;
-
+  idProposta: string;
 }
 
 const Dashboard: React.FC = () =>{
   const token = localStorage.getItem('FaceIT:token');
   const [propostaRetorno, setPropostas] = useState<PropostaItem[]>([]);
- 
+
   useEffect(() => {
     const config = {
-             headers: { Authorization: `Bearer ${token}` }
-           };
+      headers: { Authorization: `Bearer ${token}` },
+    };
     // Carrega os dados do drop down
-    api.get(`/proposta`,config)
-    .then((res) => {
-      const proposta:PropostaItem[] = res.data;
-       setPropostas(proposta);
+    api.get(`/proposta`, config).then((res) => {
+      const proposta: PropostaItem[] = res.data;
+      setPropostas(proposta);
     });
   }, []);
 

@@ -1,8 +1,22 @@
-import React, {useCallback,useRef,ChangeEvent,useEffect,useState,} from 'react';
+import React, {
+  useCallback,
+  useRef,
+  ChangeEvent,
+  useEffect,
+  useState,
+} from 'react';
 import Grid from '@material-ui/core/Grid';
 import { FiMail, FiUser, FiLock, FiCamera } from 'react-icons/fi';
-import {Input as InputMaterialCore,FormControl,InputLabel,MenuItem,Checkbox,ListItemText,Select,} from '@material-ui/core';
-import {createStyles,makeStyles,useTheme,Theme} from '@material-ui/core/styles';
+import {
+  Input as InputMaterialCore,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Checkbox,
+  ListItemText,
+  Select,
+} from '@material-ui/core';
+
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
@@ -12,29 +26,9 @@ import Input from '../../components/Input';
 import Button from '../../components/Button';
 import getValidationsErros from '../../utils/getValidationsErrors';
 import { useToast } from '../../hooks/Toast';
-import { Container, Content, AvatarInput} from './styles';
+import { Container, Content, AvatarInput } from './styles';
 import { useAuth } from '../../hooks/Auth';
 import '../../styles/global.css';
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    formControl: {
-      margin: theme.spacing(1),
-      minWidth: 120,
-      maxWidth: 300,
-    },
-    chips: {
-      display: 'flex',
-      flexWrap: 'wrap',
-    },
-    chip: {
-      margin: 2,
-    },
-    noLabel: {
-      marginTop: theme.spacing(3),
-    },
-  }),
-);
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -77,8 +71,6 @@ interface Skills {
   array: SkillItem[];
 }
 const Perfil: React.FC = () => {
-  const classes = useStyles();
-  const theme = useTheme();
   const { user, token } = useAuth();
   const formRef = useRef<FormHandles>(null);
   const { addToast } = useToast();
@@ -96,20 +88,22 @@ const Perfil: React.FC = () => {
 
   const [userSkill, setSkillUser] = useState<string[]>(['C#', 'SQL Server']);
 
-  const handleChange = (event: ChangeEvent<{ value: unknown }>) => {
+  const handleChange = (event: ChangeEvent<{ value: unknown }>): void => {
     setSkillUser(event.target.value as string[]);
   };
 
-  const handleChangeMultiple = (event: ChangeEvent<{ value: unknown }>) => {
-    const { options } = event.target as HTMLSelectElement;
-    const value: string[] = [];
-    for (let i = 0, l = options.length; i < l; i += 1) {
-      if (options[i].selected) {
-        value.push(options[i].value);
-      }
-    }
-    setSkillUser(value);
-  };
+  // const handleChangeMultiple = (
+  //   event: ChangeEvent<{ value: unknown }>,
+  // ): void => {
+  //   const { options } = event.target as HTMLSelectElement;
+  //   const value: string[] = [];
+  //   for (let i = 0, l = options.length; i < l; i += 1) {
+  //     if (options[i].selected) {
+  //       value.push(options[i].value);
+  //     }
+  //   }
+  //   setSkillUser(value);
+  // };
 
   const handleAvatarChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -219,11 +213,10 @@ const Perfil: React.FC = () => {
 
   return (
     <>
-    <br/>
-    <br/>
-    <br/>
-   
-    
+      <br />
+      <br />
+      <br />
+
       <Container>
         <Content>
           <span>
@@ -246,7 +239,6 @@ const Perfil: React.FC = () => {
                     />
                   </label>
                 </AvatarInput>
-              
               </Grid>
               <Grid item xs={12} sm={5}>
                 <Input
@@ -322,12 +314,13 @@ const Perfil: React.FC = () => {
                 />
               </Grid>
               <Grid item xs={12} sm={5}>
-                <Input 
-                name="cep" 
-                icon={FiUser} 
-                type="text" 
-                placeholder="CEP" 
-                maxLength={8}/>
+                <Input
+                  name="cep"
+                  icon={FiUser}
+                  type="text"
+                  placeholder="CEP"
+                  maxLength={8}
+                />
 
                 <Input
                   name="logradouro"
@@ -397,9 +390,12 @@ const Perfil: React.FC = () => {
                 />
               </Grid>
               <Grid item xs={12} sm={12}>
-            <FormControl>
-                  <InputLabel id="demo-mutiple-checkbox-label">Skills</InputLabel>
-                  <Select className="select-multi" 
+                <FormControl>
+                  <InputLabel id="demo-mutiple-checkbox-label">
+                    Skills
+                  </InputLabel>
+                  <Select
+                    className="select-multi"
                     labelId="demo-mutiple-checkbox-label"
                     id="demo-mutiple-checkbox"
                     multiple
@@ -407,9 +403,8 @@ const Perfil: React.FC = () => {
                     value={userSkill}
                     onChange={handleChange}
                     input={<InputMaterialCore />}
-                    renderValue={(selected) =>
-                      (selected as string[]).join(', ')}
                     MenuProps={MenuProps}
+                    renderValue={(s) => (s as string[]).join(', ')}
                   >
                     {skillRetorno.map((s) => (
                       <MenuItem key={s?.idSkill} value={s?.descricao}>
@@ -421,9 +416,9 @@ const Perfil: React.FC = () => {
                     ))}
                   </Select>
                 </FormControl>
-                </Grid>
+              </Grid>
             </Grid>
-            
+
             <Button type="submit" tamanho={25}>
               Atualizar
             </Button>

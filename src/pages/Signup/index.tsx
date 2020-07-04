@@ -8,7 +8,6 @@ import axios from 'axios';
 import * as Yup from 'yup';
 import { Link, useHistory } from 'react-router-dom';
 import api from '../../services/api';
-import logoImg from '../../assets/logo.svg';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 
@@ -175,10 +174,8 @@ const SignUp: React.FC = () => {
           };
 
           await api.post('/PessoaFisica', pessoaFisica);
-        } 
-        
-          else {
-           const pessoaJuridica = {
+        } else {
+          const pessoaJuridica = {
             razaoSocial: data.name,
             nomeFantasia: data.sobrenome,
             cnpj: data.cpf,
@@ -235,7 +232,7 @@ const SignUp: React.FC = () => {
         });
       }
     },
-    [addToast, history],
+    [addToast, history, value],
   );
 
   return (
@@ -335,12 +332,8 @@ const SignUp: React.FC = () => {
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <Input 
-                 name="cep"  
-                 icon={FiUser} 
-                 type="text" 
-                 placeholder="CEP" />
-                 
+                <Input name="cep" icon={FiUser} type="text" placeholder="CEP" />
+
                 <Input
                   name="logradouro"
                   icon={FiUser}

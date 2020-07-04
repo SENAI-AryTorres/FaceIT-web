@@ -4,29 +4,23 @@ import {Pie} from 'react-chartjs-2';
 import { Grid } from '@material-ui/core';
 
 const data = {
-	labels: [
-    'Javascript',
-    'Java', 
-    'Python',
-    'PHP',
-    'C#',
-    'C++'
-	],
-	datasets: [{
-		data: [25,20,20,15,10,10],
-        backgroundColor:[
-          'rgba(255,99,132)',
-          'rgba(54,162,235)',
-          'rgba(255,206,86)',
-          'rgba(75,192,192)',
-          'rgba(153,102,255)',
-          'rgba(255,159,64)',
-          
-        ],
-	}]
+  labels: ['Javascript', 'Java', 'Python', 'PHP', 'C#', 'C++'],
+  datasets: [
+    {
+      data: [25, 20, 20, 15, 10, 10],
+      backgroundColor: [
+        'rgba(255,99,132)',
+        'rgba(54,162,235)',
+        'rgba(255,206,86)',
+        'rgba(75,192,192)',
+        'rgba(153,102,255)',
+        'rgba(255,159,64)',
+      ],
+    },
+  ],
 };
-const Ranking: React.FC = () =>{
-  return(
+const Ranking: React.FC = () => {
+  return (
     <Container>
       <Content>
         <AnimationContainer> 
@@ -41,8 +35,7 @@ const Ranking: React.FC = () =>{
       </AnimationContainer>
       </Content>
     </Container>
-
   );
-}
+};
 
 export default Ranking;
