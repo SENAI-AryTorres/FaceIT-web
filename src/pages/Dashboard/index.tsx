@@ -1,34 +1,26 @@
-import React,{useState,useEffect} from 'react';
-import { Container } from './styles';
-import api from '../../services/api'
-import { Card } from '@material-ui/core';
-import {AuthProvider, useAuth} from '../../hooks/Auth'
-import { config } from 'process';
-import { render } from '@testing-library/react';
+import React, { useState, useEffect } from 'react';
+import api from '../../services/api';
+import { useAuth } from '../../hooks/Auth';
 
 interface PropostaItem {
   descricao: string;
-  idProposta:string;
-
+  idProposta: string;
 }
 
-
-const Dashboard: React.FC = () =>{
+const Dashboard: React.FC = () => {
   const token = useAuth();
   const [propostaRetorno, setPropostas] = useState<PropostaItem[]>([]);
- 
+
   useEffect(() => {
     const config = {
-             headers: { Authorization: `Bearer ${token}` }
-           };
+      headers: { Authorization: `Bearer ${token}` },
+    };
     // Carrega os dados do drop down
-    api.get(`/proposta`,config)
-    .then((res) => {
-      const proposta:PropostaItem[] = res.data;
-       setPropostas(proposta);
+    api.get(`/proposta`, config).then((res) => {
+      const proposta: PropostaItem[] = res.data;
+      setPropostas(proposta);
     });
-  }, []);
-
+  }, [token]);
 
   // useEffect(() => {
   //   (async () => {
@@ -40,22 +32,12 @@ const Dashboard: React.FC = () =>{
   //   })();
   //  }, []);
 
-
-
- 
- 
-
-
-    return(
-      <div>
-      {propostaRetorno.map((s)=>(
-        <li key={s.idProposta}>
-          {s.descricao}
-        </li>
+  return (
+    <div>
+      {propostaRetorno.map((s) => (
+        <li key={s.idProposta}>{s.descricao}</li>
       ))}
-       
-      </div>
-     
-    );
-}
+    </div>
+  );
+};
 export default Dashboard;

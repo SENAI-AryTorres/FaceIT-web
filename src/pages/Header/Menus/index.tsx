@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
-import Badge from '@material-ui/core/Badge';
+
 import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -101,7 +101,7 @@ const Dashboard: React.FC = () => {
     setOpen(false);
   };
 
-  const handleClick = () => {
+  const handleClick = (): void => {
     localStorage.removeItem('FaceIT:user');
     localStorage.removeItem('FaceIT:token');
     window.setTimeout(document.location.reload(), 1000);
