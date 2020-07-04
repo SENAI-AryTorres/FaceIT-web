@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState, useEffect } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { RadioGroup, FormControlLabel, Radio } from '@material-ui/core';
 import { FiArrowLeft, FiMail, FiUser, FiLock } from 'react-icons/fi';
@@ -50,7 +50,7 @@ interface SignUpFormData {
 const SignUp: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const [value, setValue] = useState('PF');
-  const [[cep,logradouro, bairro, cidade, municipio,uf], setCep] = useState(['','','','','','']);
+  const [[logradouro, bairro, cidade,uf], setCep] = useState(['','','','']);
   const [[name, sobrenome, RG, CPF], setPFPJ] = useState([
     'Nome',
     'Sobrenome',
@@ -71,15 +71,14 @@ const SignUp: React.FC = () => {
   const handleBlueCep = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const valor = (event.target as HTMLInputElement).value;
-      setValue(valor);
       axios.get(`https://viacep.com.br/ws/${valor}/json/`)
      .then((res) => { 
-         setCep([res.data.cep,res.data.logradouro, res.data.bairro,res.data.localidade, res.data.unidade, res.data.uf])
+         setCep([res.data.logradouro, res.data.bairro,res.data.localidade, res.data.uf])
 
      })
 
     },
-    [],
+    [setCep],
   );
 
 
@@ -104,7 +103,7 @@ const SignUp: React.FC = () => {
         ]);
       }
     },
-    [],
+    [setPFPJ],
   );
 
   const handleSubmit = useCallback(
@@ -348,7 +347,7 @@ const SignUp: React.FC = () => {
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <Input name="cep" icon={FiUser} type="text" placeholder="CEP" onBlur={e=>handleBlueCep(e)}  />
+                <Input name="cep" icon={FiUser} type="text" placeholder="CEP" onBlur={handleBlueCep}  />
 
                 <Input
                   name="logradouro"
@@ -404,7 +403,6 @@ const SignUp: React.FC = () => {
                   type="text"
                   placeholder="Município"
                   tamanho={50}
-                  value={municipio}
                 />
                 <Input
                   name="dddCelular"
