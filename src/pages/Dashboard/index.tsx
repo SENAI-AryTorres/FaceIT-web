@@ -8,7 +8,7 @@ interface PropostaItem {
 }
 
 const Dashboard: React.FC = () => {
-  const token = useAuth();
+  const token = localStorage.getItem('FaceIT:token');
   const [propostaRetorno, setPropostas] = useState<PropostaItem[]>([]);
 
   useEffect(() => {
@@ -20,22 +20,12 @@ const Dashboard: React.FC = () => {
       const proposta: PropostaItem[] = res.data;
       setPropostas(proposta);
     });
-  }, [token]);
-
-  // useEffect(() => {
-  //   (async () => {
-  //     const config = {
-  //       headers: { Authorization: `Bearer ${token}` }
-  //     };
-  //    const proposta = await api.get(`/proposta`,config);
-  //    setPropostas(proposta.data);
-  //   })();
-  //  }, []);
+  }, []);
 
   return (
     <div>
       {propostaRetorno.map((s) => (
-        <li key={s.idProposta}>{s.descricao}</li>
+        <Card key={s.idProposta}>{s.descricao}</Card>
       ))}
     </div>
   );

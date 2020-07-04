@@ -1,6 +1,17 @@
 .select-multi{
-  color: white;
-  background-color: lightgray;
+  color: grey !important;
   border-radius: 5px;
   align-self: start;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;       /* Remove default arrow */
+  background-color: #312e38;; 
+}
+
+.MuiSelect-icon{
+  color:#1fada5 !important;
+}
+
+.MuiCheckbox-colorSecondary{
+  color:#1fada5 !important;
 }
