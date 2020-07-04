@@ -1,10 +1,10 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { RadioGroup, FormControlLabel, Radio } from '@material-ui/core';
 import { FiArrowLeft, FiMail, FiUser, FiLock } from 'react-icons/fi';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
-
+import axios from 'axios';
 import * as Yup from 'yup';
 import { Link, useHistory } from 'react-router-dom';
 import api from '../../services/api';
@@ -16,6 +16,16 @@ import getValidationsErros from '../../utils/getValidationsErrors';
 import { useToast } from '../../hooks/Toast';
 import { Container, Content, AnimationContainer, Background } from './styles';
 
+
+// interface GetCepItem{
+//   cep:string;
+//   logradouro:string;
+//   complemento:string;
+//   bairro:string;
+//   localidade:string;
+//   uf:string;
+
+// }
 interface SignUpFormData {
   pfpj: string;
   name: string;
@@ -41,13 +51,25 @@ interface SignUpFormData {
 const SignUp: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const [value, setValue] = useState('PF');
-
+  const [viaCep, setCep] = useState<GetCepItem[]>([]);
   const [[name, sobrenome, RG, CPF], setPFPJ] = useState([
     'Nome',
     'Sobrenome',
     'RG',
     'CPF',
   ]);
+
+  // useEffect(() => {
+  //   // Carrega os dados do drop down
+  //   axios.get(`https://viacep.com.br/ws/04835330/json/`)
+  //   .then((res) => {
+  //      console.log(res.data);
+     
+     
+  //   });
+  // }, []);
+
+
 
   const { addToast } = useToast();
 

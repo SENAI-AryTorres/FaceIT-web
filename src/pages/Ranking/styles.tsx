@@ -21,7 +21,8 @@ export const AnimationContainer = styled.div`
 
 align-items: center;
 justify-content: center;
-margin:150px;
+margin-top:70px;
+
 background-color:black;
 padding:12px;
 text-align:center;

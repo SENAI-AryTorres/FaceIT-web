@@ -1,7 +1,7 @@
 import React from 'react';
 import {Container,Content,AnimationContainer} from './styles';
 import {Pie} from 'react-chartjs-2';
-import Paper from '@material-ui/core/Paper';
+import { Grid } from '@material-ui/core';
 
 const data = {
 	labels: [
@@ -30,10 +30,14 @@ const Ranking: React.FC = () =>{
     <Container>
       <Content>
         <AnimationContainer> 
-      <h4 style={{alignItems:'center', color:'white'}}>Linguagens de Programação (%)</h4>
-     <div style={{width: '100%'}}>
-        <Pie data={data} width={600}  height={300} options={{ maintainAspectRatio: false }}/>
-        </div>
+        <Grid container>
+          <Grid item xs={12} sm={12}>
+              <h4 style={{alignItems:'center', color:'white'}}>Linguagens de Programação (%)</h4>
+               <div style={{width: '100%'}}>
+                 <Pie data={data} width={600}  height={300} options={{ maintainAspectRatio: false }}/>
+               </div>
+         </Grid>
+        </Grid>
       </AnimationContainer>
       </Content>
     </Container>
