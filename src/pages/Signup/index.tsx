@@ -15,16 +15,14 @@ import getValidationsErros from '../../utils/getValidationsErrors';
 import { useToast } from '../../hooks/Toast';
 import { Container, Content, AnimationContainer, Background } from './styles';
 
-
-// interface GetCepItem{
-//   cep:string;
-//   logradouro:string;
-//   complemento:string;
-//   bairro:string;
-//   localidade:string;
-//   uf:string;
-
-// }
+interface GetCepItem {
+  cep: string;
+  logradouro: string;
+  complemento: string;
+  bairro: string;
+  localidade: string;
+  uf: string;
+}
 interface SignUpFormData {
   pfpj: string;
   name: string;
@@ -63,12 +61,9 @@ const SignUp: React.FC = () => {
   //   axios.get(`https://viacep.com.br/ws/04835330/json/`)
   //   .then((res) => {
   //      console.log(res.data);
-     
-     
+
   //   });
   // }, []);
-
-
 
   const { addToast } = useToast();
 
@@ -89,7 +84,7 @@ const SignUp: React.FC = () => {
         ]);
       }
     },
-    [],
+    [setValue],
   );
 
   const handleSubmit = useCallback(
