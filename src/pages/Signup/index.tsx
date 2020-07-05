@@ -15,14 +15,15 @@ import getValidationsErros from '../../utils/getValidationsErrors';
 import { useToast } from '../../hooks/Toast';
 import { Container, Content, AnimationContainer, Background } from './styles';
 
-interface GetCepItem {
-  cep: string;
-  logradouro: string;
-  complemento: string;
-  bairro: string;
-  localidade: string;
-  uf: string;
-}
+// interface GetCepItem{
+//   cep:string;
+//   logradouro:string;
+//   complemento:string;
+//   bairro:string;
+//   localidade:string;
+//   uf:string;
+
+// }
 interface SignUpFormData {
   pfpj: string;
   name: string;
