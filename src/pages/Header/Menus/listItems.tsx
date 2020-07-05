@@ -46,13 +46,13 @@ export const secondaryListItems = (
       </ListItemIcon>
       <ListItemText primary="Dashboard" />
     </ListItem>
-    <ListItem button component={Link} to="/ranking">
+    <ListItem button component={Link} to="/vacancy">
       <ListItemIcon>
         <ShoppingCartIcon />
       </ListItemIcon>
       <ListItemText primary="Criar Proposta" />
     </ListItem>
-    <ListItem button component={Link} to="/vacancy">
+    <ListItem button component={Link} to="/profile">
       <ListItemIcon>
         <PeopleIcon />
       </ListItemIcon>

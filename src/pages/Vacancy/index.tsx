@@ -31,9 +31,14 @@ const Vacancy: React.FC = () => {
         await schema.validate(data, {
           abortEarly: false,
         });
+        const vaga ={
+          descricao: data.descricao,
+          tipoContrato: data.tipoContrato
+          
+        }
+        await api.post(`/Proposta`, vaga);
 
-        await api.post('/proposta', data);
-        history.push('/');
+       
         addToast({
           type: 'success',
           title: 'Proposta Cadastrada!',
@@ -89,9 +94,9 @@ const Vacancy: React.FC = () => {
                 padding: '5px',
               }}
             >
-              <option defaultValue="">Tipo de Contrato:</option>
-              <option value="clt">CLT</option>
-              <option value="freelancer">Freelancer</option>
+              <option value="" selected disabled >Tipo de Contrato:</option>
+              <option value="pf">Pessoa Física</option>
+              <option value="pj">Pessoa Jurídica</option>
             </Select>
             <Button type="submit">Cadastrar</Button>
           </Form>
