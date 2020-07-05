@@ -4,6 +4,8 @@ import { FormHandles } from '@unform/core';
 import Select from '@material-ui/core/Select';
 import * as Yup from 'yup';
 import { useHistory } from 'react-router-dom';
+import { MenuItem, InputLabel, FormControl } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import api from '../../services/api';
 import Button from '../../components/Button';
 import getValidationsErros from '../../utils/getValidationsErrors';
@@ -14,7 +16,18 @@ interface VacancyFormData {
   descricao: string;
   tipoContrato: string;
 }
+const useStyles = makeStyles((theme) => ({
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+    color: 'white',
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
+  },
+}));
 const Vacancy: React.FC = () => {
+  const classes = useStyles();
   const formRef = useRef<FormHandles>(null);
   const { addToast } = useToast();
   const history = useHistory();
@@ -27,18 +40,16 @@ const Vacancy: React.FC = () => {
           tipoContrato: Yup.string().required('Tipo de Contrato obrigatório'),
           // rg: Yup.string().required('RG obrigatório').min(9, 'RG Inválido. Corrija a quantidade de caracteres'),
         });
-
+        console.log('werw');
         await schema.validate(data, {
           abortEarly: false,
         });
-        const vaga ={
+        const vaga = {
           descricao: data.descricao,
-          tipoContrato: data.tipoContrato
-          
-        }
+          tipoContrato: data.tipoContrato,
+        };
         await api.post(`/Proposta`, vaga);
 
-       
         addToast({
           type: 'success',
           title: 'Proposta Cadastrada!',
@@ -58,7 +69,7 @@ const Vacancy: React.FC = () => {
         });
       }
     },
-    [addToast, history],
+    [addToast],
   );
 
   return (
@@ -76,28 +87,46 @@ const Vacancy: React.FC = () => {
               placeholder="Descrição da vaga"
             />
 
-            <label
-              htmlFor="select-contract"
+            {/* <label
+              htmlFor="tipoContrato"
+              htmlFor="tipoContrato"
               style={{ color: 'white', textAlign: 'start', paddingLeft: '5px' }}
             >
               Tipo de Contrato
-            </label>
-            <Select
-              id="select-contract"
-              name="tipoContrato"
-              style={{
-                width: '98%',
-                background: '#232129',
-                color: 'white',
-                borderRadius: '5px',
-                textAlign: 'start',
-                padding: '5px',
-              }}
-            >
-              <option value="" selected disabled >Tipo de Contrato:</option>
-              <option value="pf">Pessoa Física</option>
-              <option value="pj">Pessoa Jurídica</option>
-            </Select>
+            </label> */}
+            <FormControl className={classes.formControl}>
+              <InputLabel
+                shrink
+                id="demo-simple-select-placeholder-label-label"
+                style={{
+                  background: '#232129',
+                  color: 'white',
+                  borderRadius: '5px',
+                  textAlign: 'start',
+                  padding: '5px',
+                }}
+              >
+                Tipo de Contrato
+              </InputLabel>
+              <Select
+                id="tipoContrato"
+                name="tipoContrato"
+                style={{
+                  width: '98%',
+                  background: '#232129',
+                  color: 'white',
+                  borderRadius: '5px',
+                  textAlign: 'start',
+                  padding: '5px',
+                }}
+              >
+                <MenuItem value="" selected disabled>
+                  --Selecione--
+                </MenuItem>
+                <MenuItem value="pf">Pessoa Física</MenuItem>
+                <MenuItem value="pj">Pessoa Jurídica</MenuItem>
+              </Select>
+            </FormControl>
             <Button type="submit">Cadastrar</Button>
           </Form>
         </AnimationContainer>
