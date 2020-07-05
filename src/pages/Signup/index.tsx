@@ -105,6 +105,7 @@ const SignUp: React.FC = () => {
       }
     },
     [],
+    
   );
 
   const handleSubmit = useCallback(
