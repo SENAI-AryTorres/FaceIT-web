@@ -48,7 +48,7 @@ interface SignUpFormData {
 const SignUp: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const [value, setValue] = useState('PF');
-  const [viaCep, setCep] = useState<GetCepItem[]>([]);
+  const [[cep,logradouro, bairro, cidade, municipio,uf], setCep] = useState(['','','','','','']);
   const [[name, sobrenome, RG, CPF], setPFPJ] = useState([
     'Nome',
     'Sobrenome',
@@ -65,6 +65,26 @@ const SignUp: React.FC = () => {
   //   });
   // }, []);
 
+<<<<<<< HEAD
+=======
+  const handleBlueCep = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const valor = (event.target as HTMLInputElement).value;
+      setValue(valor);
+      axios.get(`https://viacep.com.br/ws/${valor}/json/`)
+     .then((res) => { 
+         setCep([res.data.cep,res.data.logradouro, res.data.bairro,res.data.localidade, res.data.unidade, res.data.uf])
+
+     })
+
+    },
+    [],
+  );
+
+
+
+
+>>>>>>> c380f7f870b015200b822078c5fded445499f9a6
   const { addToast } = useToast();
 
   const history = useHistory();
@@ -287,6 +307,7 @@ const SignUp: React.FC = () => {
                   placeholder={CPF}
                   tamanho={50}
                   maxLength={14}
+                  
                 />
                 <Input
                   name="email"
@@ -327,13 +348,14 @@ const SignUp: React.FC = () => {
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <Input name="cep" icon={FiUser} type="text" placeholder="CEP" />
+                <Input name="cep" icon={FiUser} type="text" placeholder="CEP" onBlur={e=>handleBlueCep(e)}  />
 
                 <Input
                   name="logradouro"
                   icon={FiUser}
                   type="text"
                   placeholder="Logradouro"
+                  value={logradouro}
                 />
                 <Input
                   name="numero"
@@ -358,6 +380,7 @@ const SignUp: React.FC = () => {
                   placeholder="UF"
                   tamanho={50}
                   maxLength={2}
+                  value={uf}
                 />
                 <Input
                   name="cidade"
@@ -365,6 +388,7 @@ const SignUp: React.FC = () => {
                   type="text"
                   placeholder="Cidade"
                   tamanho={50}
+                  value={cidade}
                 />
                 <Input
                   name="bairro"
@@ -372,6 +396,7 @@ const SignUp: React.FC = () => {
                   type="text"
                   placeholder="bairro"
                   tamanho={50}
+                  value={bairro}
                 />
                 <Input
                   name="municipio"
@@ -379,6 +404,7 @@ const SignUp: React.FC = () => {
                   type="text"
                   placeholder="Município"
                   tamanho={50}
+                  value={municipio}
                 />
                 <Input
                   name="dddCelular"
