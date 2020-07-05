@@ -22,7 +22,7 @@ const Dashboard: React.FC = () => {
       const proposta: PropostaItem[] = res.data;
       setPropostas(proposta);
     });
-  }, []);
+  }, [token]);
 
   return (
     <Container>

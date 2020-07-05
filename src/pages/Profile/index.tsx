@@ -41,6 +41,30 @@ const MenuProps = {
   },
 };
 interface PerfilFormData {
+  pfpj: string;
+  name: string;
+  rg: string;
+  cpf: string;
+  razaoSocial: string;
+  nomeFantasia: string;
+  ie: string;
+  cnpj: string;
+  email: string;
+  password: string;
+  passwordConfirm: string;
+  telefone: string;
+  cep: string;
+  logradouro: string;
+  numero: string;
+  complemento: string;
+  uf: string;
+  cidade: string;
+  bairro: string;
+  municipio: string;
+  celular: string;
+}
+
+interface PerfilEditFormData {
   cpf: string;
   idPessoa: string;
   nome: string;
@@ -66,6 +90,7 @@ interface PerfilFormData {
     tipo: string;
   };
 }
+
 interface SkillItem {
   descricao: string;
   idSkill: number;
@@ -75,14 +100,40 @@ interface SkillItem {
 interface Skills {
   array: SkillItem[];
 }
+
 const Perfil: React.FC = () => {
   const { user, token } = useAuth();
   const formRef = useRef<FormHandles>(null);
   const { addToast } = useToast();
   const history = useHistory();
   const [skillRetorno, setSkills] = useState<SkillItem[]>([]);
-  const [userProps, setUserProps] = useState<PerfilFormData | undefined>();
   const [pfShow, setPfShow] = useState(true);
+  const [
+    {
+      pfpj,
+      name,
+      rg,
+      cpf,
+      razaoSocial,
+      nomeFantasia,
+      ie,
+      cnpj,
+      email,
+      password,
+      passwordConfirm,
+      telefone,
+      cep,
+      logradouro,
+      numero,
+      complemento,
+      uf,
+      cidade,
+      bairro,
+      municipio,
+      celular,
+    },
+    setUserEdit,
+  ] = useState<PerfilFormData>({} as PerfilFormData);
 
   useEffect(() => {
     const config = {
@@ -93,21 +144,44 @@ const Perfil: React.FC = () => {
       const skills: SkillItem[] = res.data;
       setSkills(skills);
     });
-
-    const url = user.tipo === 'PF' ? '/PessoaFisica' : '/PessoaJuridica';
+    const isPF = user.tipo === 'PF';
+    setPfShow(isPF);
+    const url = isPF ? '/PessoaFisica' : '/PessoaJuridica';
     api.get(`${url}/${user.idPessoa}`, config).then((res) => {
-      const userProp: PerfilFormData = res.data;
+      const userProp: PerfilEditFormData = res.data;
 
-      setUserProps(userProp);
+      const userEditBanco: PerfilFormData = {
+        pfpj: userProp.idPessoaNavigation.tipo,
+        name: userProp.nome,
+        rg: userProp.rg,
+        cpf: userProp.cpf,
+        razaoSocial: '',
+        nomeFantasia: '',
+        ie: '',
+        cnpj: '',
+        email: userProp.idPessoaNavigation.email,
+        password: '',
+        passwordConfirm: '',
+        telefone: userProp.idPessoaNavigation.telefone,
+        cep: userProp.idPessoaNavigation.endereco.cep,
+        logradouro: userProp.idPessoaNavigation.endereco.logradouro,
+        numero: userProp.idPessoaNavigation.endereco.numero,
+        complemento: userProp.idPessoaNavigation.endereco.complemento,
+        uf: userProp.idPessoaNavigation.endereco.uf,
+        cidade: userProp.idPessoaNavigation.endereco.municipio,
+        bairro: userProp.idPessoaNavigation.endereco.bairro,
+        municipio: '',
+        celular: userProp.idPessoaNavigation.celular,
+      };
+
+      setUserEdit(userEditBanco);
     });
-  }, [token, user.tipo, user.idPessoa]);
+  }, [token, user.tipo, user.idPessoa, setUserEdit]);
 
   const [userSkill, setSkillUser] = useState<string[]>(['C#', 'SQL Server']);
-
-  const handleChange = (event: ChangeEvent<{ value: unknown }>): void => {
+  const handleChangeInput = (event: ChangeEvent<{ value: unknown }>): void => {
     setSkillUser(event.target.value as string[]);
   };
-
   const handleAvatarChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       if (e.target.files) {
@@ -188,79 +262,79 @@ const Perfil: React.FC = () => {
         await schema.validate(data, {
           abortEarly: false,
         });
-        // if (user.tipo === 'PF') {
-        //   const pessoaFisica = {
-        //     nome: data.name,
-        //     cpf: data.cpf,
-        //     rg: data.rg,
-        //     idPessoa: 0,
-        //     idPessoaNavigation: {
-        //       idPessoa: 0,
-        //       tipo: 'PF',
-        //       email: data.email,
-        //       senha: data.password,
-        //       excluido: false,
-        //       googleID: 0,
-        //       celular: data.dddCelular + data.celular,
-        //       telefone: data.ddd + data.telefone,
-        //       role: 'user',
-        //       endereco: {
-        //         cep: data.cep,
-        //         pais: 'Brasil',
-        //         uf: data.uf,
-        //         municipio: data.municipio,
-        //         logradouro: data.logradouro,
-        //         numero: data.numero,
-        //         complemento: data.complemento,
-        //         bairro: data.bairro,
-        //         idPessoa: 0,
-        //       },
-        //       // "imagem": {
-        //       //   "idPessoa": 0,
-        //       //   "nome": "string",
-        //       //   "bytes": "string"
-        //       // },
-        //     },
-        //   };
+        if (user.tipo === 'PF') {
+          const pessoaFisica = {
+            nome: data.name,
+            cpf: data.cpf,
+            rg: data.rg,
+            idPessoa: 0,
+            idPessoaNavigation: {
+              idPessoa: 0,
+              tipo: 'PF',
+              email: data.email,
+              senha: data.password,
+              excluido: false,
+              googleID: 0,
+              celular: data.celular,
+              telefone: data.telefone,
+              role: 'user',
+              endereco: {
+                cep: data.cep,
+                pais: 'Brasil',
+                uf: data.uf,
+                municipio: data.municipio,
+                logradouro: data.logradouro,
+                numero: data.numero,
+                complemento: data.complemento,
+                bairro: data.bairro,
+                idPessoa: 0,
+              },
+              // "imagem": {
+              //   "idPessoa": 0,
+              //   "nome": "string",
+              //   "bytes": "string"
+              // },
+            },
+          };
 
-        //   await api.post('/PessoaFisica', pessoaFisica);
-        // } else {
-        //   const pessoaJuridica = {
-        //     razaoSocial: data.name,
-        //     nomeFantasia: data.sobrenome,
-        //     cnpj: data.cpf,
-        //     ie: data.rg,
-        //     idPessoa: 0,
-        //     idPessoaNavigation: {
-        //       idPessoa: 0,
-        //       tipo: 'PJ',
-        //       email: data.email,
-        //       senha: data.password,
-        //       excluido: false,
-        //       googleID: 0,
-        //       celular: data.dddCelular + data.celular,
-        //       telefone: data.ddd + data.telefone,
-        //       role: 'user',
-        //       endereco: {
-        //         cep: data.cep,
-        //         pais: 'Brasil',
-        //         uf: data.uf,
-        //         municipio: data.municipio,
-        //         logradouro: data.logradouro,
-        //         numero: data.numero,
-        //         complemento: data.complemento,
-        //         bairro: data.bairro,
-        //         idPessoa: 0,
-        //       },
-        //       imagem: {
-        //         idPessoa: 0,
-        //         nome: 'string',
-        //         bytes: 'string',
-        //       },
-        //     },
-        //   };
-        //   await api.post('/PessoaJuridica', pessoaJuridica);
-        // }
+          await api.post('/PessoaFisica', pessoaFisica);
+        } else {
+          const pessoaJuridica = {
+            razaoSocial: data.razaoSocial,
+            nomeFantasia: data.nomeFantasia,
+            cnpj: data.cnpj,
+            ie: data.ie,
+            idPessoa: 0,
+            idPessoaNavigation: {
+              idPessoa: 0,
+              tipo: 'PJ',
+              email: data.email,
+              senha: data.password,
+              excluido: false,
+              googleID: 0,
+              celular: data.celular,
+              telefone: data.telefone,
+              role: 'user',
+              endereco: {
+                cep: data.cep,
+                pais: 'Brasil',
+                uf: data.uf,
+                municipio: data.municipio,
+                logradouro: data.logradouro,
+                numero: data.numero,
+                complemento: data.complemento,
+                bairro: data.bairro,
+                idPessoa: 0,
+              },
+              imagem: {
+                idPessoa: 0,
+                nome: 'string',
+                bytes: 'string',
+              },
+            },
+          };
+          await api.post('/PessoaJuridica', pessoaJuridica);
+        }
         history.push('/');
         addToast({
           type: 'success',
@@ -281,7 +355,7 @@ const Perfil: React.FC = () => {
         });
       }
     },
-    [addToast, history],
+    [addToast, history, user],
   );
 
   return (
@@ -321,6 +395,8 @@ const Perfil: React.FC = () => {
                       icon={FiUser}
                       type="text"
                       placeholder="Nome"
+                      // onChange={this.handleChange}
+                      value={name}
                     />
 
                     <Input
@@ -330,6 +406,7 @@ const Perfil: React.FC = () => {
                       placeholder="RG"
                       maxLength={12}
                       tamanho={50}
+                      value={rg}
                     />
                     <Input
                       name="cpf"
@@ -338,6 +415,7 @@ const Perfil: React.FC = () => {
                       placeholder="cpf"
                       tamanho={50}
                       maxLength={14}
+                      value={cpf}
                     />
                   </>
                 )}
@@ -379,7 +457,7 @@ const Perfil: React.FC = () => {
                   icon={FiMail}
                   type="text"
                   placeholder="E-mail"
-                  value={userProps?.idPessoaNavigation.email}
+                  value={email}
                 />
                 <Input
                   name="password"
@@ -398,20 +476,22 @@ const Perfil: React.FC = () => {
                   maxLength={20}
                 />
                 <Input
-                  name="ddd"
-                  type="text"
-                  maxLength={3}
-                  placeholder="DDD"
-                  tamanho={30}
-                />
-                <Input
                   name="telefone"
                   icon={FiLock}
                   type="text"
                   placeholder="Telefone"
-                  tamanho={70}
-                  maxLength={8}
-                  value={userProps?.idPessoaNavigation.telefone}
+                  tamanho={50}
+                  maxLength={10}
+                  value={telefone}
+                />
+                <Input
+                  name="celular"
+                  icon={FiUser}
+                  type="text"
+                  placeholder="Celular"
+                  tamanho={50}
+                  maxLength={11}
+                  value={celular}
                 />
               </Grid>
               <Grid item xs={12} sm={5}>
@@ -421,7 +501,7 @@ const Perfil: React.FC = () => {
                   type="text"
                   placeholder="CEP"
                   maxLength={8}
-                  value={userProps?.idPessoaNavigation.endereco.cep}
+                  value={cep}
                 />
 
                 <Input
@@ -429,7 +509,7 @@ const Perfil: React.FC = () => {
                   icon={FiUser}
                   type="text"
                   placeholder="Logradouro"
-                  value={userProps?.idPessoaNavigation.endereco.logradouro}
+                  value={logradouro}
                 />
                 <Input
                   name="numero"
@@ -438,7 +518,7 @@ const Perfil: React.FC = () => {
                   placeholder="Número"
                   tamanho={50}
                   maxLength={8}
-                  value={userProps?.idPessoaNavigation.endereco.numero}
+                  value={numero}
                 />
                 <Input
                   name="complemento"
@@ -447,7 +527,7 @@ const Perfil: React.FC = () => {
                   placeholder="Complemento"
                   tamanho={50}
                   maxLength={50}
-                  value={userProps?.idPessoaNavigation.endereco.complemento}
+                  value={complemento}
                 />
                 <Input
                   name="uf"
@@ -456,7 +536,7 @@ const Perfil: React.FC = () => {
                   placeholder="UF"
                   tamanho={50}
                   maxLength={2}
-                  value={userProps?.idPessoaNavigation.endereco.uf}
+                  value={uf}
                 />
                 <Input
                   name="cidade"
@@ -464,7 +544,7 @@ const Perfil: React.FC = () => {
                   type="text"
                   placeholder="Cidade"
                   tamanho={50}
-                  value={userProps?.idPessoaNavigation.endereco.municipio}
+                  value={municipio}
                 />
                 <Input
                   name="bairro"
@@ -472,7 +552,7 @@ const Perfil: React.FC = () => {
                   type="text"
                   placeholder="bairro"
                   tamanho={50}
-                  value={userProps?.idPessoaNavigation.endereco.bairro}
+                  value={bairro}
                 />
                 <Input
                   name="municipio"
@@ -480,23 +560,7 @@ const Perfil: React.FC = () => {
                   type="text"
                   placeholder="Município"
                   tamanho={50}
-                  value={userProps?.idPessoaNavigation.endereco.cep}
-                />
-                <Input
-                  name="dddCelular"
-                  type="text"
-                  placeholder="DDD "
-                  tamanho={30}
-                  maxLength={3}
-                />
-                <Input
-                  name="celular"
-                  icon={FiUser}
-                  type="text"
-                  placeholder="Celular"
-                  tamanho={70}
-                  maxLength={9}
-                  value={userProps?.idPessoaNavigation.celular}
+                  value={cep}
                 />
               </Grid>
               <Grid item xs={12} sm={2} />
@@ -512,7 +576,7 @@ const Perfil: React.FC = () => {
                     multiple
                     variant="outlined"
                     value={userSkill}
-                    onChange={handleChange}
+                    onChange={handleChangeInput}
                     input={<InputMaterialCore />}
                     MenuProps={MenuProps}
                     renderValue={(s) => (s as string[]).join(', ')}

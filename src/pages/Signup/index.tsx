@@ -6,7 +6,7 @@ import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 import axios from 'axios';
 import * as Yup from 'yup';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import api from '../../services/api';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
@@ -51,13 +51,7 @@ const SignUp: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const [value, setValue] = useState('PF');
   const [pfShow, setPfShow] = useState(true);
-  const [[logradouro, bairro, cidade, municipio, uf], setCep] = useState([
-    '',
-    '',
-    '',
-    '',
-    '',
-  ]);
+  const [[logradouro, bairro, cidade, uf], setCep] = useState(['', '', '', '']);
 
   const handleBlueCep = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,7 +61,6 @@ const SignUp: React.FC = () => {
           res.data.logradouro,
           res.data.bairro,
           res.data.localidade,
-          res.data.unidade,
           res.data.uf,
         ]);
       });
@@ -76,8 +69,6 @@ const SignUp: React.FC = () => {
   );
 
   const { addToast } = useToast();
-
-  const histoy = useHistory();
 
   const handleChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -119,10 +110,10 @@ const SignUp: React.FC = () => {
           passwordconfirm: Yup.string().min(6, 'No minimo 6 digitos'),
           telefone: Yup.string()
             .required('Telefone obrigatório')
-            .min(8, 'Quantidade de caracteres inválida'),
+            .min(10, 'Quantidade de caracteres inválida'),
           cep: Yup.string()
             .required('CEP obrigatório')
-            .min(10, 'Quantidade de caracteres inválida'),
+            .min(8, 'Quantidade de caracteres inválida'),
           logradouro: Yup.string().required('Logradouro obrigatório'),
           numero: Yup.string().required('Número obrigatório'),
           complemento: Yup.string().required('Complemento obrigatório'),
@@ -286,7 +277,7 @@ const SignUp: React.FC = () => {
                       name="cpf"
                       icon={FiUser}
                       type="text"
-                      placeholder="cpf"
+                      placeholder="CPF"
                       tamanho={50}
                       maxLength={14}
                     />
@@ -370,6 +361,7 @@ const SignUp: React.FC = () => {
                   icon={FiUser}
                   type="text"
                   placeholder="CEP"
+                  maxLength={9}
                   onBlur={(e) => handleBlueCep(e)}
                 />
 
