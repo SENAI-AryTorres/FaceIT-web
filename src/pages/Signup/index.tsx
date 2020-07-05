@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState, useEffect } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { RadioGroup, FormControlLabel, Radio } from '@material-ui/core';
 import { FiArrowLeft, FiMail, FiUser, FiLock } from 'react-icons/fi';
@@ -26,13 +26,15 @@ interface GetCepItem {
 interface SignUpFormData {
   pfpj: string;
   name: string;
-  sobrenome: string;
   rg: string;
   cpf: string;
+  razaoSocial: string;
+  nomeFantasia: string;
+  ie: string;
+  cnpj: string;
   email: string;
   password: string;
   password_confirm: string;
-  ddd: number;
   telefone: string;
   cep: string;
   logradouro: string;
@@ -42,69 +44,51 @@ interface SignUpFormData {
   cidade: string;
   bairro: string;
   municipio: string;
-  dddCelular: string;
   celular: string;
 }
 const SignUp: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const [value, setValue] = useState('PF');
-  const [[cep,logradouro, bairro, cidade, municipio,uf], setCep] = useState(['','','','','','']);
-  const [[name, sobrenome, RG, CPF], setPFPJ] = useState([
-    'Nome',
-    'Sobrenome',
-    'RG',
-    'CPF',
+  const [pfShow, setPfShow] = useState(true);
+  const [[logradouro, bairro, cidade, municipio, uf], setCep] = useState([
+    '',
+    '',
+    '',
+    '',
+    '',
   ]);
 
-  // useEffect(() => {
-  //   // Carrega os dados do drop down
-  //   axios.get(`https://viacep.com.br/ws/04835330/json/`)
-  //   .then((res) => {
-  //      console.log(res.data);
-
-  //   });
-  // }, []);
-
-<<<<<<< HEAD
-=======
   const handleBlueCep = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const valor = (event.target as HTMLInputElement).value;
-      setValue(valor);
-      axios.get(`https://viacep.com.br/ws/${valor}/json/`)
-     .then((res) => { 
-         setCep([res.data.cep,res.data.logradouro, res.data.bairro,res.data.localidade, res.data.unidade, res.data.uf])
-
-     })
-
+      axios.get(`https://viacep.com.br/ws/${valor}/json/`).then((res) => {
+        setCep([
+          res.data.logradouro,
+          res.data.bairro,
+          res.data.localidade,
+          res.data.unidade,
+          res.data.uf,
+        ]);
+      });
     },
-    [],
+    [setCep],
   );
 
-
-
-
->>>>>>> c380f7f870b015200b822078c5fded445499f9a6
   const { addToast } = useToast();
 
-  const history = useHistory();
+  const histoy = useHistory();
 
   const handleChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const valor = (event.target as HTMLInputElement).value;
       setValue(valor);
       if (valor === 'PF') {
-        setPFPJ(['Nome', 'Sobrenome', 'RG', 'CPF']);
+        setPfShow(true);
       } else {
-        setPFPJ([
-          'Razão Social',
-          'Nome Fantasia',
-          'Inscrição Estadual',
-          'CNPJ',
-        ]);
+        setPfShow(false);
       }
     },
-    [setValue],
+    [setPfShow],
   );
 
   const handleSubmit = useCallback(
@@ -113,27 +97,31 @@ const SignUp: React.FC = () => {
         formRef.current?.setErrors({});
         const schema = Yup.object().shape({
           name: Yup.string().required('Nome obrigatório'),
-          sobrenome: Yup.string().required('Sobrenome obrigatório'),
           rg: Yup.string()
             .required('RG obrigatório')
             .min(9, 'RG Inválido. Corrija a quantidade de caracteres'),
           cpf: Yup.string()
             .required('CPF obrigatório')
             .min(11, 'CPF Invalido. Corrija a quantidade de caracteres'),
+
+          razaoSocial: Yup.string().required('Razão Social é obrigatório'),
+          nomeFantasia: Yup.string().required('Nome Fantasia é obrigatório'),
+
+          cnpj: Yup.string()
+            .required('CNPJ obrigatório')
+            .min(13, 'CNPJ Invalido. Corrija a quantidade de caracteres'),
+
           email: Yup.string()
             .required('E-mail obrigatório')
             .email('Digite um e-mail válido'),
           password: Yup.string().min(6, 'No minimo 6 digitos'),
           passwordconfirm: Yup.string().min(6, 'No minimo 6 digitos'),
-          ddd: Yup.string()
-            .required('DDD do Telefone obrigatório')
-            .min(2, 'Informe ao menos dois números'),
           telefone: Yup.string()
             .required('Telefone obrigatório')
             .min(8, 'Quantidade de caracteres inválida'),
           cep: Yup.string()
             .required('CEP obrigatório')
-            .min(8, 'Quantidade de caracteres inválida'),
+            .min(10, 'Quantidade de caracteres inválida'),
           logradouro: Yup.string().required('Logradouro obrigatório'),
           numero: Yup.string().required('Número obrigatório'),
           complemento: Yup.string().required('Complemento obrigatório'),
@@ -141,12 +129,9 @@ const SignUp: React.FC = () => {
           cidade: Yup.string().required('Cidade obrigatório'),
           bairro: Yup.string().required('Bairro obrigatório'),
           municipio: Yup.string().required('Município obrigatório'),
-          dddCelular: Yup.string()
-            .required('DDD do Celular obrigatório')
-            .min(2, 'DDD incorreto'),
           celular: Yup.string()
             .required('Celular obrigatório')
-            .min(9, 'Quantidade de caracteres inválida'),
+            .min(11, 'Quantidade de caracteres inválida'),
         });
 
         await schema.validate(data, {
@@ -166,8 +151,8 @@ const SignUp: React.FC = () => {
               senha: data.password,
               excluido: false,
               googleID: 0,
-              celular: data.dddCelular + data.celular,
-              telefone: data.ddd + data.telefone,
+              celular: data.celular,
+              telefone: data.telefone,
               role: 'user',
               endereco: {
                 cep: data.cep,
@@ -191,10 +176,10 @@ const SignUp: React.FC = () => {
           await api.post('/PessoaFisica', pessoaFisica);
         } else {
           const pessoaJuridica = {
-            razaoSocial: data.name,
-            nomeFantasia: data.sobrenome,
-            cnpj: data.cpf,
-            ie: data.rg,
+            razaoSocial: data.razaoSocial,
+            nomeFantasia: data.nomeFantasia,
+            cnpj: data.cnpj,
+            ie: data.ie,
             idPessoa: 0,
             idPessoaNavigation: {
               idPessoa: 0,
@@ -203,8 +188,8 @@ const SignUp: React.FC = () => {
               senha: data.password,
               excluido: false,
               googleID: 0,
-              celular: data.dddCelular + data.celular,
-              telefone: data.ddd + data.telefone,
+              celular: data.celular,
+              telefone: data.telefone,
               role: 'user',
               endereco: {
                 cep: data.cep,
@@ -227,7 +212,7 @@ const SignUp: React.FC = () => {
           await api.post('/PessoaJuridica', pessoaJuridica);
         }
 
-        history.push('/');
+        // history.push('/');
         addToast({
           type: 'success',
           title: 'Cadastro Realizado!',
@@ -247,7 +232,7 @@ const SignUp: React.FC = () => {
         });
       }
     },
-    [addToast, history, value],
+    [addToast, value],
   );
 
   return (
@@ -279,36 +264,66 @@ const SignUp: React.FC = () => {
                 </RadioGroup>
               </Grid>
               <Grid item xs={12} sm={6}>
-                <Input
-                  name="name"
-                  icon={FiUser}
-                  type="text"
-                  placeholder={name}
-                />
-                <Input
-                  name="sobrenome"
-                  icon={FiUser}
-                  type="text"
-                  placeholder={sobrenome}
-                  maxLength={50}
-                />
-                <Input
-                  name="rg"
-                  icon={FiUser}
-                  type="text"
-                  placeholder={RG}
-                  maxLength={12}
-                  tamanho={50}
-                />
-                <Input
-                  name="cpf"
-                  icon={FiUser}
-                  type="text"
-                  placeholder={CPF}
-                  tamanho={50}
-                  maxLength={14}
-                  
-                />
+                {pfShow && (
+                  <>
+                    <Input
+                      name="name"
+                      icon={FiUser}
+                      type="text"
+                      placeholder="Nome"
+                    />
+
+                    <Input
+                      name="rg"
+                      icon={FiUser}
+                      type="text"
+                      placeholder="RG"
+                      maxLength={12}
+                      tamanho={50}
+                    />
+                    <Input
+                      name="cpf"
+                      icon={FiUser}
+                      type="text"
+                      placeholder="cpf"
+                      tamanho={50}
+                      maxLength={14}
+                    />
+                  </>
+                )}
+                {!pfShow && (
+                  <>
+                    <Input
+                      name="razaosocial"
+                      icon={FiUser}
+                      type="text"
+                      placeholder="Razão Social"
+                    />
+                    <Input
+                      name="nomefantasia"
+                      icon={FiUser}
+                      type="text"
+                      placeholder="Nome Fantasia"
+                      maxLength={50}
+                    />
+                    <Input
+                      name="ie"
+                      icon={FiUser}
+                      type="text"
+                      maxLength={50}
+                      tamanho={50}
+                      placeholder="Inscrlção Estadual"
+                    />
+                    <Input
+                      name="cnpj"
+                      icon={FiUser}
+                      type="text"
+                      placeholder="CNPJ"
+                      tamanho={50}
+                      maxLength={14}
+                    />
+                  </>
+                )}
                 <Input
                   name="email"
                   icon={FiMail}
@@ -332,23 +347,30 @@ const SignUp: React.FC = () => {
                   maxLength={20}
                 />
                 <Input
-                  name="ddd"
-                  type="text"
-                  maxLength={3}
-                  placeholder="DDD"
-                  tamanho={30}
-                />
-                <Input
                   name="telefone"
                   icon={FiLock}
                   type="text"
                   placeholder="Telefone"
-                  tamanho={70}
-                  maxLength={8}
+                  tamanho={50}
+                  maxLength={11}
+                />
+                <Input
+                  name="celular"
+                  icon={FiUser}
+                  type="text"
+                  placeholder="Celular"
+                  tamanho={50}
+                  maxLength={11}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <Input name="cep" icon={FiUser} type="text" placeholder="CEP" onBlur={e=>handleBlueCep(e)}  />
+                <Input
+                  name="cep"
+                  icon={FiUser}
+                  type="text"
+                  placeholder="CEP"
+                  onBlur={(e) => handleBlueCep(e)}
+                />
 
                 <Input
                   name="logradouro"
@@ -404,22 +426,7 @@ const SignUp: React.FC = () => {
                   type="text"
                   placeholder="Município"
                   tamanho={50}
-                  value={municipio}
-                />
-                <Input
-                  name="dddCelular"
-                  type="text"
-                  placeholder="DDD "
-                  tamanho={30}
-                  maxLength={3}
-                />
-                <Input
-                  name="celular"
-                  icon={FiUser}
-                  type="text"
-                  placeholder="Celular"
-                  tamanho={70}
-                  maxLength={9}
+                  // value={municipio}
                 />
               </Grid>
             </Grid>
