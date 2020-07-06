@@ -9,11 +9,9 @@ interface PropostaItem {
   idProposta: string;
 }
 
-
 const Dashboard: React.FC = () => {
   const token = localStorage.getItem('FaceIT:token');
   const [propostaRetorno, setPropostas] = useState<PropostaItem[]>([]);
-
 
   useEffect(() => {
     const config = {
@@ -32,8 +30,8 @@ const Dashboard: React.FC = () => {
         <AnimationContainer>
           <Grid container spacing={3}>
             {propostaRetorno.map((s) => (
-              <Grid item xs={12} sm={4}>
-                <Card className="custom-card" key={s.idProposta}>
+              <Grid item xs={12} sm={4} key={s.idProposta}>
+                <Card className="custom-card">
                   <div className="card-body">
                     <h5 className="card-title">Proposta</h5>
                     <br />

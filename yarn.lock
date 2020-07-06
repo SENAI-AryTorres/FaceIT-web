@@ -10899,6 +10899,11 @@ typescript@~3.7.2:
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.7.5.tgz#0692e21f65fd4108b9330238aac11dd2e177a1ae"
   integrity sha512-/P5lkRXkWHNAbcJIiHPfRoKqyd7bsyCma1hZNUGfn20qm64T6ZBlrzprymeu918H+mB/0rIg2gGK/BXkhhYgBw==
 
+unform-material-ui@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/unform-material-ui/-/unform-material-ui-1.0.1.tgz#dcc629bbbcbb680c654b34e9a85e716f883e7787"
+  integrity sha512-hR/rxoaa5bnNMBvZ/WGfBkFI6vwQywEzRT9jMcWXEO0MiHv1p9n71atD8u7qmF4hVfzMvdC+LPDxG6RAeu2cVw==
+
 unicode-canonical-property-names-ecmascript@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/unicode-canonical-property-names-ecmascript/-/unicode-canonical-property-names-ecmascript-1.0.4.tgz#2619800c4c825800efdd8343af7dd9933cbe2818"

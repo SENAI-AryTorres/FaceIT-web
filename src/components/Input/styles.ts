@@ -7,6 +7,7 @@ interface ContainerProps {
   isFilled: boolean;
   isErrored: boolean;
   tamanho: number;
+  visivel: boolean;
 }
 
 export const Container = styled.div<ContainerProps>`
@@ -14,6 +15,13 @@ export const Container = styled.div<ContainerProps>`
   border-radius: 10px;
 
   padding: 16px;
+  ${(props) =>
+    props.visivel === false &&
+    css`
+      display: none !important;
+    `}
+
+
 
   ${(props) =>
     props.tamanho > 0 &&

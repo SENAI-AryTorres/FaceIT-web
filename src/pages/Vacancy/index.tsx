@@ -1,32 +1,46 @@
-import React, { useCallback, useRef,useState,ChangeEvent } from 'react';
+import React, { useCallback, useRef, useState, ChangeEvent } from 'react';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
-import Select from '@material-ui/core/Select';
+
+import { Select, TextField } from 'unform-material-ui';
 import * as Yup from 'yup';
 import { useHistory } from 'react-router-dom';
 import { MenuItem, InputLabel, FormControl } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import api from '../../services/api';
-import Button from '../../components/Button';
-import getValidationsErros from '../../utils/getValidationsErrors';
-import { useToast } from '../../hooks/Toast';
-import { Container, Content, AnimationContainer, Text } from './styles';
 
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { Container, Content, AnimationContainer } from './styles';
+import { useToast } from '../../hooks/Toast';
+import getValidationsErros from '../../utils/getValidationsErrors';
+import Button from '../../components/Button';
+import api from '../../services/api';
+import { useAuth } from '../../hooks/Auth';
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      '& .MuiTextField-root': {
+        margin: theme.spacing(1),
+        width: '25ch',
+      },
+    },
+  }),
+);
 interface VacancyFormData {
   descricao: string;
   tipoContrato: string;
 }
 
-
 const Vacancy: React.FC = () => {
+  const { user } = useAuth();
+  const token = localStorage.getItem('FaceIT:token');
+  const classes = useStyles();
   const formRef = useRef<FormHandles>(null);
   const { addToast } = useToast();
   const history = useHistory();
-  const [selectValue, setSelect] = useState();
+  const [selectValue, setSelect] = useState<string>();
 
- 
   const handleChangeInput = (event: ChangeEvent<{ value: unknown }>): void => {
-    setSelect(event.target.value);
+    setSelect(event.target.value as string);
   };
 
   const handleSubmit = useCallback(
@@ -38,21 +52,33 @@ const Vacancy: React.FC = () => {
           tipoContrato: Yup.string().required('Tipo de Contrato obrigatório'),
           // rg: Yup.string().required('RG obrigatório').min(9, 'RG Inválido. Corrija a quantidade de caracteres'),
         });
-        
+
         await schema.validate(data, {
           abortEarly: false,
         });
+
         const vaga = {
+          idProposta: 0,
+          idEmpresa: user.idPessoa,
           descricao: data.descricao,
           tipoContrato: data.tipoContrato,
+          cidade: 'São Paulo',
+          encerrada: false,
+          latitude: '11515151',
+          longitude: '2322323232',
         };
-        await api.post(`/Proposta`, vaga);
+        const config = {
+          headers: { Authorization: `Bearer ${token}` },
+        };
+        await api.post(`/Proposta`, vaga, config);
 
         addToast({
           type: 'success',
           title: 'Proposta Cadastrada!',
           description: 'Sua proposta foi cadastrada com sucesso',
         });
+
+        history.push('/dashboard');
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationsErros(err);
@@ -67,22 +93,33 @@ const Vacancy: React.FC = () => {
         });
       }
     },
-    [addToast],
+    [addToast, selectValue],
   );
 
   return (
     <Container>
       <Content>
         <AnimationContainer style={{ textAlign: 'start' }}>
-          <Form ref={formRef} onSubmit={handleSubmit}>
+          <Form ref={formRef} onSubmit={handleSubmit} className={classes.root}>
             <h1 style={{ textAlign: 'center', color: 'white' }}>
               Cadastre sua Proposta
             </h1>
-            <Text
-              maxLength={300}
+            <TextField
+              multiline
+              // maxLength={300}
               rows={4}
               name="descricao"
+              fullWidth
               placeholder="Descrição da vaga"
+              style={{
+                background: '#232129',
+                color: '#ffffff',
+                borderRadius: '5px',
+                textAlign: 'start',
+                padding: '5px',
+                marginRight: '10px !important',
+                marginLeft: '0px',
+              }}
             />
 
             {/* <label
@@ -95,7 +132,7 @@ const Vacancy: React.FC = () => {
             <FormControl>
               <InputLabel
                 shrink
-                id="demo-simple-select-placeholder-label-label"
+                id="filled-multiline-static"
                 style={{
                   background: '#232129',
                   color: 'white',
@@ -107,9 +144,8 @@ const Vacancy: React.FC = () => {
                 Tipo de Contrato
               </InputLabel>
               <Select
-                value={selectValue}
+                value={selectValue || ''}
                 onChange={handleChangeInput}
-                id="tipoContrato"
                 name="tipoContrato"
                 style={{
                   width: '98%',
@@ -118,9 +154,7 @@ const Vacancy: React.FC = () => {
                   borderRadius: '5px',
                   textAlign: 'start',
                   padding: '5px',
-                  
                 }}
-               
               >
                 <MenuItem value="" selected disabled>
                   --Selecione--
