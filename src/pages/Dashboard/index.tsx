@@ -9,9 +9,11 @@ interface PropostaItem {
   idProposta: string;
 }
 
+
 const Dashboard: React.FC = () => {
   const token = localStorage.getItem('FaceIT:token');
   const [propostaRetorno, setPropostas] = useState<PropostaItem[]>([]);
+
 
   useEffect(() => {
     const config = {

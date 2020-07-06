@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef,useState,ChangeEvent } from 'react';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 import Select from '@material-ui/core/Select';
@@ -16,21 +16,19 @@ interface VacancyFormData {
   descricao: string;
   tipoContrato: string;
 }
-const useStyles = makeStyles((theme) => ({
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
-    color: 'white',
-  },
-  selectEmpty: {
-    marginTop: theme.spacing(2),
-  },
-}));
+
+
 const Vacancy: React.FC = () => {
-  const classes = useStyles();
   const formRef = useRef<FormHandles>(null);
   const { addToast } = useToast();
   const history = useHistory();
+  const [selectValue, setSelect] = useState();
+
+ 
+  const handleChangeInput = (event: ChangeEvent<{ value: unknown }>): void => {
+    setSelect(event.target.value);
+  };
+
   const handleSubmit = useCallback(
     async (data: VacancyFormData) => {
       try {
@@ -40,7 +38,7 @@ const Vacancy: React.FC = () => {
           tipoContrato: Yup.string().required('Tipo de Contrato obrigatório'),
           // rg: Yup.string().required('RG obrigatório').min(9, 'RG Inválido. Corrija a quantidade de caracteres'),
         });
-        console.log('werw');
+        
         await schema.validate(data, {
           abortEarly: false,
         });
@@ -94,7 +92,7 @@ const Vacancy: React.FC = () => {
             >
               Tipo de Contrato
             </label> */}
-            <FormControl className={classes.formControl}>
+            <FormControl>
               <InputLabel
                 shrink
                 id="demo-simple-select-placeholder-label-label"
@@ -109,6 +107,8 @@ const Vacancy: React.FC = () => {
                 Tipo de Contrato
               </InputLabel>
               <Select
+                value={selectValue}
+                onChange={handleChangeInput}
                 id="tipoContrato"
                 name="tipoContrato"
                 style={{
@@ -118,7 +118,9 @@ const Vacancy: React.FC = () => {
                   borderRadius: '5px',
                   textAlign: 'start',
                   padding: '5px',
+                  
                 }}
+               
               >
                 <MenuItem value="" selected disabled>
                   --Selecione--
