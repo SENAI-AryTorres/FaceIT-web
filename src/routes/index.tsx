@@ -10,6 +10,7 @@ import Vacancy from '../pages/Vacancy';
 import ForgotPassword from '../pages/ForgotPassword';
 import Faq from '../pages/Faq';
 import Ranking from '../pages/Ranking';
+import Opportunities from '../pages/Opportunities';
 
 
 const Routes: React.FC = () => (
@@ -19,6 +20,7 @@ const Routes: React.FC = () => (
     <Route path="/forgotPassword" exact component={ForgotPassword} />
     <Route path="/profile" exact component={Profile} isPrivate/>
     <Route path="/dashboard" exact component={Dashboard} isPrivate />
+    <Route path="/opportunities" exact component={Opportunities} isPrivate />
     <Route path="/ranking" exact component={Ranking} isPrivate />
     <Route path="/faq" exact component={Faq} isPrivate />
     <Route path="/vacancy" exact component={Vacancy} isPrivate />

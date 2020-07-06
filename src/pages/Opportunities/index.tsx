@@ -9,7 +9,7 @@ interface PropostaItem {
   idProposta: string;
 }
 
-const Dashboard: React.FC = () => {
+const Opportunities: React.FC = () => {
   const token = localStorage.getItem('FaceIT:token');
   const [propostaRetorno, setPropostas] = useState<PropostaItem[]>([]);
 
@@ -29,11 +29,29 @@ const Dashboard: React.FC = () => {
       <Content>
         <AnimationContainer>
           <Grid container spacing={3}>
-            <h3>Dashboard</h3>
-            </Grid>
+            {propostaRetorno.map((s) => (
+              <Grid item xs={12} sm={4} key={s.idProposta}>
+                <Card className="custom-card">
+                  <div className="card-body">
+                    <h5 className="card-title">Proposta</h5>
+                    <br />
+                    <h6 className="card-description">{s.descricao}</h6>
+                    <br />
+                  </div>
+                  <Button
+                    variant="contained"
+                    className="custom-button"
+                    endIcon={<Icon>send</Icon>}
+                  >
+                    Candidatar-se
+                  </Button>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
         </AnimationContainer>
       </Content>
     </Container>
   );
 };
-export default Dashboard;
+export default Opportunities;

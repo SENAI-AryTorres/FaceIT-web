@@ -57,7 +57,6 @@ interface PerfilFormData {
   numero: string;
   complemento: string;
   uf: string;
-  cidade: string;
   bairro: string;
   municipio: string;
   celular: string;
@@ -65,6 +64,10 @@ interface PerfilFormData {
 }
 
 interface PerfilEditFormData {
+  razaoSocial: string,
+  nomeFantasia: string,
+  cnpj: string,
+  ie: string,
   cpf: string;
   idPessoa: string;
   nome: string;
@@ -158,22 +161,21 @@ const Perfil: React.FC = () => {
         name: userProp.nome,
         rg: userProp.rg,
         cpf: userProp.cpf,
-        razaoSocial: '',
-        nomeFantasia: '',
-        ie: '',
-        cnpj: '',
+        razaoSocial: userProp.razaoSocial,
+        nomeFantasia: userProp.nomeFantasia ,
+        ie:userProp.ie,
+        cnpj: userProp.cnpj,
         email: userProp.idPessoaNavigation.email,
         password: '',
-        passwordConfirm: '',
+        passwordConfirm: '', 
         telefone: userProp.idPessoaNavigation.telefone,
         cep: userProp.idPessoaNavigation.endereco.cep,
         logradouro: userProp.idPessoaNavigation.endereco.logradouro,
         numero: userProp.idPessoaNavigation.endereco.numero,
         complemento: userProp.idPessoaNavigation.endereco.complemento,
         uf: userProp.idPessoaNavigation.endereco.uf,
-        cidade: userProp.idPessoaNavigation.endereco.municipio,
         bairro: userProp.idPessoaNavigation.endereco.bairro,
-        municipio: '',
+        municipio:userProp.idPessoaNavigation.endereco.municipio,
         celular: userProp.idPessoaNavigation.celular,
         idPessoa: userProp.idPessoa,
       };
@@ -532,7 +534,7 @@ const Perfil: React.FC = () => {
                   icon={FiUser}
                   type="text"
                   placeholder="CEP"
-                  maxLength={8}
+                  maxLength={9}
                   // value={cep}
                 />
 
@@ -570,14 +572,7 @@ const Perfil: React.FC = () => {
                   maxLength={2}
                   // value={uf}
                 />
-                <Input
-                  name="cidade"
-                  icon={FiUser}
-                  type="text"
-                  placeholder="Cidade"
-                  tamanho={50}
-                  // value={municipio}
-                />
+               
                 <Input
                   name="bairro"
                   icon={FiUser}

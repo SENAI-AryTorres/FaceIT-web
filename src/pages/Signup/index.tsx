@@ -438,14 +438,6 @@ const SignUp: React.FC = () => {
                   value={uf}
                 />
                 <Input
-                  name="cidade"
-                  icon={FiUser}
-                  type="text"
-                  placeholder="Cidade"
-                  tamanho={50}
-                  value={cidade}
-                />
-                <Input
                   name="bairro"
                   icon={FiUser}
                   type="text"
@@ -458,7 +450,7 @@ const SignUp: React.FC = () => {
                   icon={FiUser}
                   type="text"
                   placeholder="Município"
-                  tamanho={50}
+                
                   // value={municipio}
                 />
               </Grid>
