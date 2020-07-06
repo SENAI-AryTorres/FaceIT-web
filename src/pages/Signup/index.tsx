@@ -87,21 +87,50 @@ const SignUp: React.FC = () => {
     async (data: SignUpFormData) => {
       try {
         formRef.current?.setErrors({});
+        console.log(data.pfpj);
         const schema = Yup.object().shape({
-          name: Yup.string().required('Nome obrigatório'),
-          rg: Yup.string()
-            .required('RG obrigatório')
-            .min(9, 'RG Inválido. Corrija a quantidade de caracteres'),
-          cpf: Yup.string()
-            .required('CPF obrigatório')
-            .min(11, 'CPF Invalido. Corrija a quantidade de caracteres'),
+          name: Yup.string().when('pfpj', {
+            is: (val) => val && val === 'PF',
+            then: Yup.string().required('Nome obrigatório'),
+          }),
+          rg: Yup.string().when('pfpj', {
+            is: (val) => val && val === 'PF',
+            then: Yup.string()
+              .required('RG obrigatório')
+              .min(9, 'RG Inválido. Corrija a quantidade de caracteres'),
+          }),
 
-          razaoSocial: Yup.string().required('Razão Social é obrigatório'),
-          nomeFantasia: Yup.string().required('Nome Fantasia é obrigatório'),
+          cpf: Yup.string().when('pfpj', {
+            is: (val) => val && val === 'PF',
+            then: Yup.string()
+              .required('CPF obrigatório')
+              .min(11, 'CPF Invalido. Corrija a quantidade de caracteres'),
+          }),
 
-          cnpj: Yup.string()
-            .required('CNPJ obrigatório')
-            .min(13, 'CNPJ Invalido. Corrija a quantidade de caracteres'),
+          razaoSocial: Yup.string().when('pfpj', {
+            is: (val) => val && val === 'PJ',
+            then: Yup.string().required('Razão Social obrigatório'),
+          }),
+          nomeFantasia: Yup.string().when('pfpj', {
+            is: (val) => val && val === 'PJ',
+            then: Yup.string().required('Nome Fantasia obrigatório'),
+          }),
+          cnpj: Yup.string().when('pfpj', {
+            is: (val) => val && val === 'PJ',
+            then: Yup.string()
+              .required('CNPJ obrigatório')
+              .min(14, 'CNPJ Inválido. Corrija a quantidade de caracteres'),
+          }),
+
+          ie: Yup.string().when('pfpj', {
+            is: (val) => val && val === 'PJ',
+            then: Yup.string()
+              .required('Inscrição Estadual obrigatória')
+              .min(
+                14,
+                'Inscrição Estadual Invalido. Corrija a quantidade de caracteres',
+              ),
+          }),
 
           email: Yup.string()
             .required('E-mail obrigatório')
@@ -232,14 +261,18 @@ const SignUp: React.FC = () => {
       <Background />
       <Content>
         <AnimationContainer>
-          <Form ref={formRef} onSubmit={handleSubmit}>
+          <Form
+            ref={formRef}
+            onSubmit={handleSubmit}
+            initialData={{ pfpj: value }}
+          >
             <h1>Faça seu cadastro</h1>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={12}>
                 <RadioGroup
                   row
                   aria-label="PFPJ"
-                  name="pfpj"
+                  name="pfpjtipo"
                   value={value}
                   onChange={handleChange}
                 >
@@ -256,6 +289,13 @@ const SignUp: React.FC = () => {
                 </RadioGroup>
               </Grid>
               <Grid item xs={12} sm={6}>
+                <Input
+                  name="pfpj"
+                  icon={FiUser}
+                  type="text"
+                  visivel={false}
+                  value={value}
+                />
                 {pfShow && (
                   <>
                     <Input
@@ -286,13 +326,13 @@ const SignUp: React.FC = () => {
                 {!pfShow && (
                   <>
                     <Input
-                      name="razaosocial"
+                      name="razaoSocial"
                       icon={FiUser}
                       type="text"
                       placeholder="Razão Social"
                     />
                     <Input
-                      name="nomefantasia"
+                      name="nomeFantasia"
                       icon={FiUser}
                       type="text"
                       placeholder="Nome Fantasia"
