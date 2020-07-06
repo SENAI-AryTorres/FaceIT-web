@@ -137,8 +137,8 @@ const Dashboard: React.FC = () => {
           >
             {user.tipo === 'PF' ? 'Pessoa Física' : 'Pessoa Jurídica'}
           </Typography>
-          <IconButton color="inherit">
-            <PowerSettingsNewIcon onClick={handleClick} />
+          <IconButton color="inherit" onClick={handleClick}>
+            <PowerSettingsNewIcon />
           </IconButton>
         </Toolbar>
       </AppBar>

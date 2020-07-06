@@ -8,7 +8,6 @@ import React, {
 import Grid from '@material-ui/core/Grid';
 import { FiMail, FiUser, FiLock, FiCamera } from 'react-icons/fi';
 import {
-  Input as InputMaterialCore,
   FormControl,
   InputLabel,
   MenuItem,
@@ -41,14 +40,17 @@ const MenuProps = {
   },
 };
 interface PerfilFormData {
+  pfpj: string;
   name: string;
-  sobrenome: string;
   rg: string;
   cpf: string;
+  razaoSocial: string;
+  nomeFantasia: string;
+  ie: string;
+  cnpj: string;
   email: string;
   password: string;
-  password_confirm: string;
-  ddd: number;
+  passwordConfirm: string;
   telefone: string;
   cep: string;
   logradouro: string;
@@ -58,9 +60,37 @@ interface PerfilFormData {
   cidade: string;
   bairro: string;
   municipio: string;
-  dddCelular: string;
   celular: string;
+  idPessoa: string;
 }
+
+interface PerfilEditFormData {
+  cpf: string;
+  idPessoa: string;
+  nome: string;
+  sobrenome: string;
+  rg: string;
+  idPessoaNavigation: {
+    candidato: {};
+    celular: string;
+    email: string;
+    endereco: {
+      bairro: string;
+      cep: string;
+      complemento: string;
+      idPessoa: string;
+      logradouro: string;
+      municipio: string;
+      numero: string;
+      pais: string;
+      uf: string;
+    };
+    pessoaSkill: {};
+    telefone: string;
+    tipo: string;
+  };
+}
+
 interface SkillItem {
   descricao: string;
   idSkill: number;
@@ -70,41 +100,92 @@ interface SkillItem {
 interface Skills {
   array: SkillItem[];
 }
+
 const Perfil: React.FC = () => {
-  const { user, token } = useAuth();
+  const { user } = useAuth();
+
+  const token = localStorage.getItem('FaceIT:token');
   const formRef = useRef<FormHandles>(null);
   const { addToast } = useToast();
   const history = useHistory();
   const [skillRetorno, setSkills] = useState<SkillItem[]>([]);
+  const [pfShow, setPfShow] = useState(true);
+  const [
+    // {
+    //   pfpj,
+    //   name,
+    //   rg,
+    //   cpf,
+    //   razaoSocial,
+    //   nomeFantasia,
+    //   ie,
+    //   cnpj,
+    //   email,
+    //   password,
+    //   passwordConfirm,
+    //   telefone,
+    //   cep,
+    //   logradouro,
+    //   numero,
+    //   complemento,
+    //   uf,
+    //   cidade,
+    //   bairro,
+    //   municipio,
+    //   celular,
+    // },
+    userEdit,
+    setUserEdit,
+  ] = useState<PerfilFormData>({} as PerfilFormData);
 
   useEffect(() => {
+    const config = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
     // Carrega os dados do drop down
     api.get(`/skill`).then((res) => {
       const skills: SkillItem[] = res.data;
       setSkills(skills);
-      // this.setState({ skills });
     });
-  }, []);
+    const isPF = user.tipo === 'PF';
+    setPfShow(isPF);
+    const url = isPF ? '/PessoaFisica' : '/PessoaJuridica';
+    api.get(`${url}/${user.idPessoa}`, config).then((res) => {
+      const userProp: PerfilEditFormData = res.data;
+
+      const userEditBanco: PerfilFormData = {
+        pfpj: userProp.idPessoaNavigation.tipo,
+        name: userProp.nome,
+        rg: userProp.rg,
+        cpf: userProp.cpf,
+        razaoSocial: '',
+        nomeFantasia: '',
+        ie: '',
+        cnpj: '',
+        email: userProp.idPessoaNavigation.email,
+        password: '',
+        passwordConfirm: '',
+        telefone: userProp.idPessoaNavigation.telefone,
+        cep: userProp.idPessoaNavigation.endereco.cep,
+        logradouro: userProp.idPessoaNavigation.endereco.logradouro,
+        numero: userProp.idPessoaNavigation.endereco.numero,
+        complemento: userProp.idPessoaNavigation.endereco.complemento,
+        uf: userProp.idPessoaNavigation.endereco.uf,
+        cidade: userProp.idPessoaNavigation.endereco.municipio,
+        bairro: userProp.idPessoaNavigation.endereco.bairro,
+        municipio: '',
+        celular: userProp.idPessoaNavigation.celular,
+        idPessoa: userProp.idPessoa,
+      };
+
+      setUserEdit(userEditBanco);
+    });
+  }, [token, user.tipo, user.idPessoa, setUserEdit]);
 
   const [userSkill, setSkillUser] = useState<string[]>(['C#', 'SQL Server']);
-
-  const handleChange = (event: ChangeEvent<{ value: unknown }>): void => {
+  const handleChangeInput = (event: ChangeEvent<{ value: unknown }>): void => {
     setSkillUser(event.target.value as string[]);
   };
-
-  // const handleChangeMultiple = (
-  //   event: ChangeEvent<{ value: unknown }>,
-  // ): void => {
-  //   const { options } = event.target as HTMLSelectElement;
-  //   const value: string[] = [];
-  //   for (let i = 0, l = options.length; i < l; i += 1) {
-  //     if (options[i].selected) {
-  //       value.push(options[i].value);
-  //     }
-  //   }
-  //   setSkillUser(value);
-  // };
-
   const handleAvatarChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       if (e.target.files) {
@@ -116,7 +197,6 @@ const Perfil: React.FC = () => {
           nome: e.target.files[0].name,
           bytes: e.target.files[0],
         };
-        console.log(e.target.files[0]);
         const config = {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -135,36 +215,57 @@ const Perfil: React.FC = () => {
       try {
         formRef.current?.setErrors({});
         const schema = Yup.object().shape({
-          name: Yup.string().required('Nome obrigatório'),
-          sobrenome: Yup.string().required('Sobrenome obrigatório'),
-          razaoSocial: Yup.string().required('Nome obrigatório'),
-          nomeFantasia: Yup.string().required('Nome obrigatório'),
-          cnpj: Yup.string()
-            .required('CNPJ obrigatório')
-            .min(14, 'CNPJ Inválido. Corrija a quantidade de caracteres'),
-          inscricaoEstadual: Yup.string()
-            .required('Inscrição Estadual obrigatória')
-            .min(
-              14,
-              'Inscrição Estadual Invalido. Corrija a quantidade de caracteres',
-            ),
-          rg: Yup.string()
-            .required('RG obrigatório')
-            .min(9, 'RG Inválido. Corrija a quantidade de caracteres'),
-          cpf: Yup.string()
-            .required('CPF obrigatório')
-            .min(11, 'CPF Invalido. Corrija a quantidade de caracteres'),
+          name: Yup.string().when('pfpj', {
+            is: (value) => value && value === 'PF',
+            then: Yup.string().required('Nome obrigatório'),
+          }),
+          rg: Yup.string().when('pfpj', {
+            is: (value) => value && value === 'PF',
+            then: Yup.string()
+              .required('RG obrigatório')
+              .min(9, 'RG Inválido. Corrija a quantidade de caracteres'),
+          }),
+
+          cpf: Yup.string().when('pfpj', {
+            is: (value) => value && value === 'PF',
+            then: Yup.string()
+              .required('CPF obrigatório')
+              .min(11, 'CPF Invalido. Corrija a quantidade de caracteres'),
+          }),
+
+          razaoSocial: Yup.string().when('pfpj', {
+            is: (value) => value && value === 'PJ',
+            then: Yup.string().required('Razão Social obrigatório'),
+          }),
+          nomeFantasia: Yup.string().when('pfpj', {
+            is: (value) => value && value === 'PJ',
+            then: Yup.string().required('Nome Fantasia obrigatório'),
+          }),
+          cnpj: Yup.string().when('pfpj', {
+            is: (value) => value && value === 'PJ',
+            then: Yup.string()
+              .required('CNPJ obrigatório')
+              .min(14, 'CNPJ Inválido. Corrija a quantidade de caracteres'),
+          }),
+
+          ie: Yup.string().when('pfpj', {
+            is: (value) => value && value === 'PJ',
+            then: Yup.string()
+              .required('Inscrição Estadual obrigatória')
+              .min(
+                14,
+                'Inscrição Estadual Invalido. Corrija a quantidade de caracteres',
+              ),
+          }),
+
           email: Yup.string()
             .required('E-mail obrigatório')
             .email('Digite um e-mail válido'),
           password: Yup.string().min(6, 'No minimo 6 digitos'),
           passwordConfirm: Yup.string().min(6, 'No minimo 6 digitos'),
-          ddd: Yup.string()
-            .required('DDD do Telefone obrigatório')
-            .min(2, 'Informe ao menos dois números'),
           telefone: Yup.string()
             .required('Telefone obrigatório')
-            .min(8, 'Quantidade de caracteres inválida'),
+            .min(10, 'Quantidade de caracteres inválida'),
           cep: Yup.string()
             .required('CEP obrigatório')
             .min(8, 'Quantidade de caracteres inválida'),
@@ -175,19 +276,91 @@ const Perfil: React.FC = () => {
           cidade: Yup.string().required('Cidade obrigatório'),
           bairro: Yup.string().required('Bairro obrigatório'),
           municipio: Yup.string().required('Município obrigatório'),
-          dddCelular: Yup.string()
-            .required('DDD do Celular obrigatório')
-            .min(2, 'DDD incorreto'),
           celular: Yup.string()
             .required('Celular obrigatório')
-            .min(9, 'Quantidade de caracteres inválida'),
+            .min(11, 'Quantidade de caracteres inválida'),
         });
 
         await schema.validate(data, {
           abortEarly: false,
         });
+        const config = {
+          headers: { Authorization: `Bearer ${token}` },
+        };
 
-        await api.post('/users', data);
+        if (user.tipo === 'PF') {
+          const pessoaFisica = {
+            nome: data.name,
+            cpf: data.cpf,
+            rg: data.rg,
+            idPessoa: data.idPessoa,
+            idPessoaNavigation: {
+              idPessoa: data.idPessoa,
+              tipo: 'PF',
+              email: data.email,
+              senha: data.password,
+              excluido: false,
+              googleID: 0,
+              celular: data.celular,
+              telefone: data.telefone,
+              role: 'user',
+              endereco: {
+                cep: data.cep,
+                pais: 'Brasil',
+                uf: data.uf,
+                municipio: data.municipio,
+                logradouro: data.logradouro,
+                numero: data.numero,
+                complemento: data.complemento,
+                bairro: data.bairro,
+                idPessoa: data.idPessoa,
+              },
+              // "imagem": {
+              //   "idPessoa": 0,
+              //   "nome": "string",
+              //   "bytes": "string"
+              // },
+            },
+          };
+
+          await api.put('/PessoaFisica', pessoaFisica, config);
+        } else {
+          const pessoaJuridica = {
+            razaoSocial: data.razaoSocial,
+            nomeFantasia: data.nomeFantasia,
+            cnpj: data.cnpj,
+            ie: data.ie,
+            idPessoa: data.idPessoa,
+            idPessoaNavigation: {
+              idPessoa: data.idPessoa,
+              tipo: 'PJ',
+              email: data.email,
+              senha: data.password,
+              excluido: false,
+              googleID: 0,
+              celular: data.celular,
+              telefone: data.telefone,
+              role: 'user',
+              endereco: {
+                cep: data.cep,
+                pais: 'Brasil',
+                uf: data.uf,
+                municipio: data.municipio,
+                logradouro: data.logradouro,
+                numero: data.numero,
+                complemento: data.complemento,
+                bairro: data.bairro,
+                idPessoa: data.idPessoa,
+              },
+              imagem: {
+                idPessoa: data.idPessoa,
+                nome: 'string',
+                bytes: 'string',
+              },
+            },
+          };
+          await api.put('/PessoaJuridica', pessoaJuridica, config);
+        }
         history.push('/');
         addToast({
           type: 'success',
@@ -208,7 +381,7 @@ const Perfil: React.FC = () => {
         });
       }
     },
-    [addToast, history],
+    [addToast, history, user],
   );
 
   return (
@@ -222,7 +395,7 @@ const Perfil: React.FC = () => {
           <span>
             Para atualizar as informações preencha abaixo e e clique em salvar
           </span>
-          <Form ref={formRef} onSubmit={handleSubmit}>
+          <Form ref={formRef} onSubmit={handleSubmit} initialData={userEdit}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={2}>
                 <AvatarInput>
@@ -241,45 +414,82 @@ const Perfil: React.FC = () => {
                 </AvatarInput>
               </Grid>
               <Grid item xs={12} sm={5}>
+                <Input name="pfpj" icon={FiUser} type="text" visivel={false} />
                 <Input
-                  name="name"
+                  name="idPessoa"
                   icon={FiUser}
                   type="text"
-                  placeholder={user.tipo === 'PF' ? 'Nome' : 'Razão Social'}
+                  visivel={false}
                 />
+                {pfShow && (
+                  <>
+                    <Input
+                      name="name"
+                      icon={FiUser}
+                      type="text"
+                      placeholder="Nome"
+                    />
 
-                <Input
-                  name="sobrenome"
-                  icon={FiUser}
-                  type="text"
-                  placeholder={
-                    user.tipo === 'PF' ? 'Sobrenome' : 'Nome Fantasia'
-                  }
-                  maxLength={80}
-                />
-                <Input
-                  name="rg"
-                  icon={FiUser}
-                  type="text"
-                  placeholder={user.tipo === 'PF' ? 'RG' : 'CNPJ'}
-                  maxLength={user.tipo === 'PF' ? 9 : 14}
-                  tamanho={50}
-                />
-                <Input
-                  name="cpf"
-                  icon={FiUser}
-                  type="text"
-                  placeholder={
-                    user.tipo === 'PF' ? 'CPF' : 'Inscrição Estadual'
-                  }
-                  maxLength={user.tipo === 'PF' ? 11 : 14}
-                  tamanho={50}
-                />
+                    <Input
+                      name="rg"
+                      icon={FiUser}
+                      type="text"
+                      placeholder="RG"
+                      maxLength={12}
+                      tamanho={50}
+                      // value={rg}
+                    />
+                    <Input
+                      name="cpf"
+                      icon={FiUser}
+                      type="text"
+                      placeholder="cpf"
+                      tamanho={50}
+                      maxLength={14}
+                      // value={cpf}
+                    />
+                  </>
+                )}
+
+                {!pfShow && (
+                  <>
+                    <Input
+                      name="razaoSocial"
+                      icon={FiUser}
+                      type="text"
+                      placeholder="Razão Social"
+                    />
+                    <Input
+                      name="nomeFantasia"
+                      icon={FiUser}
+                      type="text"
+                      placeholder="Nome Fantasia"
+                      maxLength={50}
+                    />
+                    <Input
+                      name="ie"
+                      icon={FiUser}
+                      type="text"
+                      maxLength={50}
+                      tamanho={50}
+                      placeholder="Inscrlção Estadual"
+                    />
+                    <Input
+                      name="cnpj"
+                      icon={FiUser}
+                      type="text"
+                      placeholder="CNPJ"
+                      tamanho={50}
+                      maxLength={14}
+                    />
+                  </>
+                )}
                 <Input
                   name="email"
                   icon={FiMail}
                   type="text"
                   placeholder="E-mail"
+                  // value={email}
                 />
                 <Input
                   name="password"
@@ -298,19 +508,22 @@ const Perfil: React.FC = () => {
                   maxLength={20}
                 />
                 <Input
-                  name="ddd"
-                  type="text"
-                  maxLength={3}
-                  placeholder="DDD"
-                  tamanho={30}
-                />
-                <Input
                   name="telefone"
                   icon={FiLock}
                   type="text"
                   placeholder="Telefone"
-                  tamanho={70}
-                  maxLength={8}
+                  tamanho={50}
+                  maxLength={10}
+                  // value={telefone}
+                />
+                <Input
+                  name="celular"
+                  icon={FiUser}
+                  type="text"
+                  placeholder="Celular"
+                  tamanho={50}
+                  maxLength={11}
+                  // value={celular}
                 />
               </Grid>
               <Grid item xs={12} sm={5}>
@@ -320,6 +533,7 @@ const Perfil: React.FC = () => {
                   type="text"
                   placeholder="CEP"
                   maxLength={8}
+                  // value={cep}
                 />
 
                 <Input
@@ -327,6 +541,7 @@ const Perfil: React.FC = () => {
                   icon={FiUser}
                   type="text"
                   placeholder="Logradouro"
+                  // value={logradouro}
                 />
                 <Input
                   name="numero"
@@ -335,6 +550,7 @@ const Perfil: React.FC = () => {
                   placeholder="Número"
                   tamanho={50}
                   maxLength={8}
+                  // value={numero}
                 />
                 <Input
                   name="complemento"
@@ -343,6 +559,7 @@ const Perfil: React.FC = () => {
                   placeholder="Complemento"
                   tamanho={50}
                   maxLength={50}
+                  // value={complemento}
                 />
                 <Input
                   name="uf"
@@ -351,6 +568,7 @@ const Perfil: React.FC = () => {
                   placeholder="UF"
                   tamanho={50}
                   maxLength={2}
+                  // value={uf}
                 />
                 <Input
                   name="cidade"
@@ -358,6 +576,7 @@ const Perfil: React.FC = () => {
                   type="text"
                   placeholder="Cidade"
                   tamanho={50}
+                  // value={municipio}
                 />
                 <Input
                   name="bairro"
@@ -365,6 +584,7 @@ const Perfil: React.FC = () => {
                   type="text"
                   placeholder="bairro"
                   tamanho={50}
+                  // value={bairro}
                 />
                 <Input
                   name="municipio"
@@ -372,24 +592,11 @@ const Perfil: React.FC = () => {
                   type="text"
                   placeholder="Município"
                   tamanho={50}
-                />
-                <Input
-                  name="dddCelular"
-                  type="text"
-                  placeholder="DDD "
-                  tamanho={30}
-                  maxLength={3}
-                />
-                <Input
-                  name="celular"
-                  icon={FiUser}
-                  type="text"
-                  placeholder="Celular"
-                  tamanho={70}
-                  maxLength={9}
+                  // value={cep}
                 />
               </Grid>
-              <Grid item xs={12} sm={12}>
+              <Grid item xs={12} sm={2} />
+              <Grid item xs={12} sm={10}>
                 <FormControl>
                   <InputLabel id="demo-mutiple-checkbox-label">
                     Skills
@@ -399,10 +606,10 @@ const Perfil: React.FC = () => {
                     labelId="demo-mutiple-checkbox-label"
                     id="demo-mutiple-checkbox"
                     multiple
-                    variant='outlined'
+                    variant="outlined"
                     value={userSkill}
-                    onChange={handleChange}
-                    input={<InputMaterialCore />}
+                    onChange={handleChangeInput}
+                    // input={<Input />}
                     MenuProps={MenuProps}
                     renderValue={(s) => (s as string[]).join(', ')}
                   >

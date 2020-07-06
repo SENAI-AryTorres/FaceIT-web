@@ -5,7 +5,20 @@
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;       /* Remove default arrow */
-  background-color: #312e38;; 
+  background-color: #312e38;;
+
+  width: 70%;
+  height: 50px;
+
+}
+.MuiInputBase-input{
+  color: white !important;
+}
+.MuiFormControl-fullWidth {
+  width: 100% !important;
+}
+.MuiFormControl-root{
+  width:100%
 }
 
 .MuiSelect-icon{
@@ -29,7 +42,7 @@
   color:black;
   font-size: 18px;
   font-weight: 700;
-  
+
 }
 .card-description{
   font-size: 14px;
