@@ -1,6 +1,11 @@
 import styled from 'styled-components';
 import { shade } from 'polished';
 
+export const Map = styled.div`
+  height: 100vh;
+  width: 100%;
+`;
+
 export const Container = styled.div`
   align-items: stretch;
   justify-content: center;

@@ -1,3 +1,21 @@
+.circle{
+  position: relative;
+  width: 20px;
+  border: 1px red;
+  border-radius: 50%;
+  background-color: red;
+  color: #ffffff !important;
+  height: 20px;
+  display:flex;
+  flex:1
+}
+
+.circleText{
+  text-align: center;
+  align-items: center;
+  padding:3px 6px 6px 7px;
+}
+
 .select-multi{
   color: grey !important;
   border-radius: 5px;
