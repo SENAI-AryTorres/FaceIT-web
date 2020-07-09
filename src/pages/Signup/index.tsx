@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { RadioGroup, FormControlLabel, Radio } from '@material-ui/core';
 import { FiArrowLeft, FiMail, FiUser, FiLock } from 'react-icons/fi';
@@ -15,17 +15,9 @@ import getValidationsErros from '../../utils/getValidationsErrors';
 import { useToast } from '../../hooks/Toast';
 import { Container, Content, AnimationContainer, Background } from './styles';
 
-// interface GetCepItem{
-//   cep:string;
-//   logradouro:string;
-//   complemento:string;
-//   bairro:string;
-//   localidade:string;
-//   uf:string;
-
-// }
 interface SignUpFormData {
   pfpj: string;
+  pfpjtipo: string;
   name: string;
   rg: string;
   cpf: string;
@@ -35,7 +27,7 @@ interface SignUpFormData {
   cnpj: string;
   email: string;
   password: string;
-  password_confirm: string;
+  passwordconfirm: string;
   telefone: string;
   cep: string;
   logradouro: string;
@@ -49,23 +41,29 @@ interface SignUpFormData {
 }
 const SignUp: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
-  const [value, setValue] = useState('PF');
   const [pfShow, setPfShow] = useState(true);
-  const [[logradouro, bairro, cidade, uf], setCep] = useState(['', '', '', '']);
+  const [dataInit, setDataInit] = useState<SignUpFormData>(
+    {} as SignUpFormData,
+  );
+
+  useEffect(() => {
+    setDataInit({ ...dataInit, pfpj: 'PF' });
+  }, []);
 
   const handleBlueCep = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const valor = (event.target as HTMLInputElement).value;
       axios.get(`https://viacep.com.br/ws/${valor}/json/`).then((res) => {
-        setCep([
-          res.data.logradouro,
-          res.data.bairro,
-          res.data.localidade,
-          res.data.uf,
-        ]);
+        setDataInit({
+          ...dataInit,
+          logradouro: res.data.logradouro,
+          bairro: res.data.bairro,
+          cidade: res.data.localidade,
+          uf: res.data.uf,
+        });
       });
     },
-    [setCep],
+    [setDataInit, dataInit],
   );
 
   const { addToast } = useToast();
@@ -73,21 +71,16 @@ const SignUp: React.FC = () => {
   const handleChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const valor = (event.target as HTMLInputElement).value;
-      setValue(valor);
-      if (valor === 'PF') {
-        setPfShow(true);
-      } else {
-        setPfShow(false);
-      }
+      setDataInit({ ...dataInit, pfpj: valor, pfpjtipo: valor });
+      setPfShow(valor === 'PF');
     },
-    [setPfShow],
+    [setPfShow, dataInit],
   );
 
   const handleSubmit = useCallback(
     async (data: SignUpFormData) => {
       try {
         formRef.current?.setErrors({});
-        console.log(data.pfpj);
         const schema = Yup.object().shape({
           name: Yup.string().when('pfpj', {
             is: (val) => val && val === 'PF',
@@ -140,6 +133,9 @@ const SignUp: React.FC = () => {
           telefone: Yup.string()
             .required('Telefone obrigatório')
             .min(10, 'Quantidade de caracteres inválida'),
+          celular: Yup.string()
+            .required('Celular obrigatório')
+            .min(11, 'Quantidade de caracteres inválida'),
           cep: Yup.string()
             .required('CEP obrigatório')
             .min(8, 'Quantidade de caracteres inválida'),
@@ -147,19 +143,15 @@ const SignUp: React.FC = () => {
           numero: Yup.string().required('Número obrigatório'),
           complemento: Yup.string().required('Complemento obrigatório'),
           uf: Yup.string().required('UF obrigatório').min(2, 'UF Inválido'),
-          cidade: Yup.string().required('Cidade obrigatório'),
           bairro: Yup.string().required('Bairro obrigatório'),
           municipio: Yup.string().required('Município obrigatório'),
-          celular: Yup.string()
-            .required('Celular obrigatório')
-            .min(11, 'Quantidade de caracteres inválida'),
         });
 
         await schema.validate(data, {
           abortEarly: false,
         });
 
-        if (value === 'PF') {
+        if (data.pfpj === 'PF') {
           const pessoaFisica = {
             nome: data.name,
             cpf: data.cpf,
@@ -223,17 +215,17 @@ const SignUp: React.FC = () => {
                 bairro: data.bairro,
                 idPessoa: 0,
               },
-              imagem: {
-                idPessoa: 0,
-                nome: 'string',
-                bytes: 'string',
-              },
+              // imagem: {
+              //   idPessoa: 0,
+              //   nome: 'string',
+              //   bytes: 'string',
+              // },
             },
           };
           await api.post('/PessoaJuridica', pessoaJuridica);
         }
+        console.log(data.pfpj);
 
-        // history.push('/');
         addToast({
           type: 'success',
           title: 'Cadastro Realizado!',
@@ -253,7 +245,7 @@ const SignUp: React.FC = () => {
         });
       }
     },
-    [addToast, value],
+    [addToast],
   );
 
   return (
@@ -264,7 +256,8 @@ const SignUp: React.FC = () => {
           <Form
             ref={formRef}
             onSubmit={handleSubmit}
-            initialData={{ pfpj: value }}
+            // initialData={{ pfpj: 'PF' }}
+            initialData={dataInit}
           >
             <h1>Faça seu cadastro</h1>
             <Grid container spacing={2}>
@@ -273,7 +266,6 @@ const SignUp: React.FC = () => {
                   row
                   aria-label="PFPJ"
                   name="pfpjtipo"
-                  value={value}
                   onChange={handleChange}
                 >
                   <FormControlLabel
@@ -289,13 +281,7 @@ const SignUp: React.FC = () => {
                 </RadioGroup>
               </Grid>
               <Grid item xs={12} sm={6}>
-                <Input
-                  name="pfpj"
-                  icon={FiUser}
-                  type="text"
-                  visivel={false}
-                  value={value}
-                />
+                <Input name="pfpj" icon={FiUser} type="text" visivel={false} />
                 {pfShow && (
                   <>
                     <Input
@@ -344,7 +330,7 @@ const SignUp: React.FC = () => {
                       type="text"
                       maxLength={50}
                       tamanho={50}
-                      placeholder="Inscrlção Estadual"
+                      placeholder="Inscrição Estadual"
                     />
                     <Input
                       name="cnpj"
@@ -402,7 +388,7 @@ const SignUp: React.FC = () => {
                   type="text"
                   placeholder="CEP"
                   maxLength={9}
-                  onBlur={(e) => handleBlueCep(e)}
+                  onBlur={handleBlueCep}
                 />
 
                 <Input
@@ -410,7 +396,6 @@ const SignUp: React.FC = () => {
                   icon={FiUser}
                   type="text"
                   placeholder="Logradouro"
-                  value={logradouro}
                 />
                 <Input
                   name="numero"
@@ -435,7 +420,6 @@ const SignUp: React.FC = () => {
                   placeholder="UF"
                   tamanho={50}
                   maxLength={2}
-                  value={uf}
                 />
                 <Input
                   name="bairro"
@@ -443,15 +427,12 @@ const SignUp: React.FC = () => {
                   type="text"
                   placeholder="bairro"
                   tamanho={50}
-                  value={bairro}
                 />
                 <Input
                   name="municipio"
                   icon={FiUser}
                   type="text"
                   placeholder="Município"
-                
-                  // value={municipio}
                 />
               </Grid>
             </Grid>

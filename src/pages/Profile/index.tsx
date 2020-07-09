@@ -64,10 +64,10 @@ interface PerfilFormData {
 }
 
 interface PerfilEditFormData {
-  razaoSocial: string,
-  nomeFantasia: string,
-  cnpj: string,
-  ie: string,
+  razaoSocial: string;
+  nomeFantasia: string;
+  cnpj: string;
+  ie: string;
   cpf: string;
   idPessoa: string;
   nome: string;
@@ -113,33 +113,9 @@ const Perfil: React.FC = () => {
   const history = useHistory();
   const [skillRetorno, setSkills] = useState<SkillItem[]>([]);
   const [pfShow, setPfShow] = useState(true);
-  const [
-    // {
-    //   pfpj,
-    //   name,
-    //   rg,
-    //   cpf,
-    //   razaoSocial,
-    //   nomeFantasia,
-    //   ie,
-    //   cnpj,
-    //   email,
-    //   password,
-    //   passwordConfirm,
-    //   telefone,
-    //   cep,
-    //   logradouro,
-    //   numero,
-    //   complemento,
-    //   uf,
-    //   cidade,
-    //   bairro,
-    //   municipio,
-    //   celular,
-    // },
-    userEdit,
-    setUserEdit,
-  ] = useState<PerfilFormData>({} as PerfilFormData);
+  const [userEdit, setUserEdit] = useState<PerfilFormData>(
+    {} as PerfilFormData,
+  );
 
   useEffect(() => {
     const config = {
@@ -162,12 +138,12 @@ const Perfil: React.FC = () => {
         rg: userProp.rg,
         cpf: userProp.cpf,
         razaoSocial: userProp.razaoSocial,
-        nomeFantasia: userProp.nomeFantasia ,
-        ie:userProp.ie,
+        nomeFantasia: userProp.nomeFantasia,
+        ie: userProp.ie,
         cnpj: userProp.cnpj,
         email: userProp.idPessoaNavigation.email,
         password: '',
-        passwordConfirm: '', 
+        passwordConfirm: '',
         telefone: userProp.idPessoaNavigation.telefone,
         cep: userProp.idPessoaNavigation.endereco.cep,
         logradouro: userProp.idPessoaNavigation.endereco.logradouro,
@@ -175,7 +151,7 @@ const Perfil: React.FC = () => {
         complemento: userProp.idPessoaNavigation.endereco.complemento,
         uf: userProp.idPessoaNavigation.endereco.uf,
         bairro: userProp.idPessoaNavigation.endereco.bairro,
-        municipio:userProp.idPessoaNavigation.endereco.municipio,
+        municipio: userProp.idPessoaNavigation.endereco.municipio,
         celular: userProp.idPessoaNavigation.celular,
         idPessoa: userProp.idPessoa,
       };
@@ -383,7 +359,7 @@ const Perfil: React.FC = () => {
         });
       }
     },
-    [addToast, history, user],
+    [addToast, history, user, token],
   );
 
   return (
@@ -572,7 +548,7 @@ const Perfil: React.FC = () => {
                   maxLength={2}
                   // value={uf}
                 />
-               
+
                 <Input
                   name="bairro"
                   icon={FiUser}

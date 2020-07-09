@@ -93,7 +93,7 @@ const Vacancy: React.FC = () => {
         });
       }
     },
-    [addToast, selectValue],
+    [addToast, history, token, user.idPessoa],
   );
 
   return (
