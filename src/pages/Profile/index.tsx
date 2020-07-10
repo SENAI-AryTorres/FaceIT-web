@@ -39,6 +39,26 @@ const MenuProps = {
     },
   },
 };
+interface SkillItem {
+  descricao: string;
+  idSkill: number;
+  idTipoSkill: number;
+}
+
+interface SkillItemUser {
+  idPessoa: string;
+  idSkill: number;
+  idTipoSkill: number;
+}
+
+interface Skills {
+  array: SkillItem[];
+}
+
+interface SkillsUser {
+  itens: SkillItemUser[];
+}
+
 interface PerfilFormData {
   pfpj: string;
   name: string;
@@ -61,6 +81,7 @@ interface PerfilFormData {
   municipio: string;
   celular: string;
   idPessoa: string;
+  pessoaSkill: string;
 }
 
 interface PerfilEditFormData {
@@ -88,20 +109,10 @@ interface PerfilEditFormData {
       pais: string;
       uf: string;
     };
-    pessoaSkill: {};
+    pessoaSkill: string;
     telefone: string;
     tipo: string;
   };
-}
-
-interface SkillItem {
-  descricao: string;
-  idSkill: number;
-  idTipoSkill: number;
-}
-
-interface Skills {
-  array: SkillItem[];
 }
 
 const Perfil: React.FC = () => {
@@ -121,11 +132,17 @@ const Perfil: React.FC = () => {
     const config = {
       headers: { Authorization: `Bearer ${token}` },
     };
+    const urlSkill = '/pessoaskill';
     // Carrega os dados do drop down
+    api.get(`${urlSkill}/${user.idPessoa}`, config).then((res) => {
+      console.log(res.data);
+    });
+
     api.get(`/skill`).then((res) => {
       const skills: SkillItem[] = res.data;
       setSkills(skills);
     });
+
     const isPF = user.tipo === 'PF';
     setPfShow(isPF);
     const url = isPF ? '/PessoaFisica' : '/PessoaJuridica';
@@ -154,6 +171,7 @@ const Perfil: React.FC = () => {
         municipio: userProp.idPessoaNavigation.endereco.municipio,
         celular: userProp.idPessoaNavigation.celular,
         idPessoa: userProp.idPessoa,
+        pessoaSkill: userProp.idPessoaNavigation.pessoaSkill,
       };
 
       setUserEdit(userEditBanco);
@@ -162,7 +180,22 @@ const Perfil: React.FC = () => {
 
   const [userSkill, setSkillUser] = useState<string[]>(['C#', 'SQL Server']);
   const handleChangeInput = (event: ChangeEvent<{ value: unknown }>): void => {
-    setSkillUser(event.target.value as string[]);
+    const selects = event.target.value as string[];
+    const skills = [] as SkillItemUser[];
+    selects.map((descricao: string): void => {
+      const item = skillRetorno.filter((c) => c.descricao === descricao);
+      skills.push({
+        idPessoa: user.idPessoa,
+        idSkill: item[0].idSkill,
+        idTipoSkill: item[0].idTipoSkill,
+      });
+    });
+    setUserEdit({
+      ...userEdit,
+      pessoaSkill: JSON.stringify(skills),
+    });
+
+    setSkillUser(selects);
   };
   const handleAvatarChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -251,7 +284,6 @@ const Perfil: React.FC = () => {
           numero: Yup.string().required('Número obrigatório'),
           complemento: Yup.string().required('Complemento obrigatório'),
           uf: Yup.string().required('UF obrigatório').min(2, 'UF Inválido'),
-          cidade: Yup.string().required('Cidade obrigatório'),
           bairro: Yup.string().required('Bairro obrigatório'),
           municipio: Yup.string().required('Município obrigatório'),
           celular: Yup.string()
@@ -293,6 +325,7 @@ const Perfil: React.FC = () => {
                 bairro: data.bairro,
                 idPessoa: data.idPessoa,
               },
+              pessoaSkill: JSON.parse(data.pessoaSkill),
               // "imagem": {
               //   "idPessoa": 0,
               //   "nome": "string",
@@ -393,6 +426,12 @@ const Perfil: React.FC = () => {
               </Grid>
               <Grid item xs={12} sm={5}>
                 <Input name="pfpj" icon={FiUser} type="text" visivel={false} />
+                <Input
+                  name="pessoaSkill"
+                  icon={FiUser}
+                  type="text"
+                  visivel={false}
+                />
                 <Input
                   name="idPessoa"
                   icon={FiUser}
