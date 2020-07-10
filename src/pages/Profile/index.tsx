@@ -46,9 +46,13 @@ interface SkillItem {
 }
 
 interface SkillItemUser {
+  id: {
+    descricao: string;
+  };
   idPessoa: string;
   idSkill: number;
   idTipoSkill: number;
+  descricao: string;
 }
 
 interface Skills {
@@ -123,6 +127,8 @@ const Perfil: React.FC = () => {
   const { addToast } = useToast();
   const history = useHistory();
   const [skillRetorno, setSkills] = useState<SkillItem[]>([]);
+  const [userSkill, setSkillUser] = useState<SkillItemUser[]>([]);
+  const [userSkillInput, setSkillUserInput] = useState<string[]>([]);
   const [pfShow, setPfShow] = useState(true);
   const [userEdit, setUserEdit] = useState<PerfilFormData>(
     {} as PerfilFormData,
@@ -132,11 +138,6 @@ const Perfil: React.FC = () => {
     const config = {
       headers: { Authorization: `Bearer ${token}` },
     };
-    const urlSkill = '/pessoaskill';
-    // Carrega os dados do drop down
-    api.get(`${urlSkill}/${user.idPessoa}`, config).then((res) => {
-      console.log(res.data);
-    });
 
     api.get(`/skill`).then((res) => {
       const skills: SkillItem[] = res.data;
@@ -176,18 +177,44 @@ const Perfil: React.FC = () => {
 
       setUserEdit(userEditBanco);
     });
-  }, [token, user.tipo, user.idPessoa, setUserEdit]);
 
-  const [userSkill, setSkillUser] = useState<string[]>(['C#', 'SQL Server']);
+    const urlSkill = '/pessoaskill';
+    api.get(`${urlSkill}/${user.idPessoa}`, config).then((res) => {
+      const selects: SkillItemUser[] = res.data;
+      const skillsStrings = [] as string[];
+      selects.map((s): void => {
+        skillsStrings.push(s.id.descricao);
+      });
+      // setUserEdit({
+      //   ...userEdit,
+      //   pessoaSkill: JSON.stringify(selects),
+      // });
+
+      setSkillUser(selects);
+      setSkillUserInput(skillsStrings);
+    });
+    // console.log(userSkillInput);
+  }, [
+    setSkills,
+    user.tipo,
+    token,
+    user.idPessoa,
+    setPfShow,
+    setSkillUser,
+    setSkillUserInput,
+  ]);
+
   const handleChangeInput = (event: ChangeEvent<{ value: unknown }>): void => {
     const selects = event.target.value as string[];
     const skills = [] as SkillItemUser[];
-    selects.map((descricao: string): void => {
-      const item = skillRetorno.filter((c) => c.descricao === descricao);
+    selects.map((s): void => {
+      const item = skillRetorno.filter((c) => c.descricao === s);
       skills.push({
+        id: { descricao: s },
         idPessoa: user.idPessoa,
         idSkill: item[0].idSkill,
         idTipoSkill: item[0].idTipoSkill,
+        descricao: s,
       });
     });
     setUserEdit({
@@ -195,7 +222,8 @@ const Perfil: React.FC = () => {
       pessoaSkill: JSON.stringify(skills),
     });
 
-    setSkillUser(selects);
+    setSkillUser(skills);
+    setSkillUserInput(selects);
   };
   const handleAvatarChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -615,22 +643,29 @@ const Perfil: React.FC = () => {
                     className="select-multi"
                     labelId="demo-mutiple-checkbox-label"
                     id="demo-mutiple-checkbox"
+                    name="skillsinput"
                     multiple
                     variant="outlined"
-                    value={userSkill}
+                    value={userSkillInput}
                     onChange={handleChangeInput}
                     // input={<Input />}
                     MenuProps={MenuProps}
                     renderValue={(s) => (s as string[]).join(', ')}
                   >
-                    {skillRetorno.map((s) => (
-                      <MenuItem key={s?.idSkill} value={s?.descricao}>
-                        <Checkbox
-                          checked={userSkill.indexOf(s.descricao) > -1}
-                        />
-                        <ListItemText primary={s?.descricao} />
-                      </MenuItem>
-                    ))}
+                    {skillRetorno &&
+                      skillRetorno.map((s) => (
+                        <MenuItem key={s.idSkill} value={s.descricao}>
+                          <Checkbox
+                            checked={
+                              userSkill &&
+                              userSkill.filter(
+                                (u) => u.descricao === s.descricao,
+                              ).length > 0
+                            }
+                          />
+                          <ListItemText primary={s?.descricao} />
+                        </MenuItem>
+                      ))}
                   </Select>
                 </FormControl>
               </Grid>
