@@ -7,6 +7,7 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import PeopleIcon from '@material-ui/icons/People';
 import BarChartIcon from '@material-ui/icons/BarChart';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
+import BallotIcon from '@material-ui/icons/Ballot';
 import { Link } from 'react-router-dom';
 
 export const mainListItems = (
@@ -22,6 +23,12 @@ export const mainListItems = (
         <LocationOnIcon />
       </ListItemIcon>
       <ListItemText primary="Oportunidades" />
+    </ListItem>
+    <ListItem button component={Link} to="/myVacanciesPf">
+      <ListItemIcon>
+        <BallotIcon />
+      </ListItemIcon>
+      <ListItemText primary="Minhas Candidaturas" />
     </ListItem>
     <ListItem button component={Link} to="/ranking">
       <ListItemIcon>
@@ -63,6 +70,12 @@ export const secondaryListItems = (
         <PeopleIcon />
       </ListItemIcon>
       <ListItemText primary="Meu Perfil" />
+    </ListItem>
+    <ListItem button component={Link} to="/myVacanciesPj">
+      <ListItemIcon>
+        <BallotIcon />
+      </ListItemIcon>
+      <ListItemText primary="Propostas Criadas" />
     </ListItem>
     <ListItem button component={Link} to="/ranking">
       <ListItemIcon>

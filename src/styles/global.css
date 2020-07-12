@@ -56,6 +56,34 @@
   max-height:20rem;
 }
 
+
+.custom-button_remove{
+  background-color: #c92020 !important;
+  color:white !important;
+  border-radius: 1px !important;
+  border-radius: 5px !important;
+
+ text-align: center !important;
+}
+
+.custom-button_remove:hover{
+  background-color: red !important;
+
+}
+
+
+.custom-button_edit{
+  background-color: lightblue !important;
+  color:white !important;
+  border-radius: 1px !important;
+  text-align: center !important;
+  border-radius: 5px !important;
+}
+
+.custom-button_edit:hover{
+  background-color: #1fada5 !important;
+}
+
 .card-title{
   color:black;
   font-size: 18px;

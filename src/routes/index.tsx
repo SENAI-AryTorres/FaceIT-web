@@ -11,7 +11,8 @@ import ForgotPassword from '../pages/ForgotPassword';
 import Faq from '../pages/Faq';
 import Ranking from '../pages/Ranking';
 import Opportunities from '../pages/Opportunities';
-
+import MyVacanciesPj from '../pages/MyVacanciesPj';
+import MyVacanciesPf from '../pages/MyVacanciesPf';
 
 const Routes: React.FC = () => (
   <Switch>
@@ -21,6 +22,8 @@ const Routes: React.FC = () => (
     <Route path="/profile" exact component={Profile} isPrivate/>
     <Route path="/dashboard" exact component={Dashboard} isPrivate />
     <Route path="/opportunities" exact component={Opportunities} isPrivate />
+    <Route path="/myVacanciespj" exact component={MyVacanciesPj} isPrivate />
+    <Route path="/myVacanciespf" exact component={MyVacanciesPf} isPrivate />
     <Route path="/ranking" exact component={Ranking} isPrivate />
     <Route path="/faq" exact component={Faq} isPrivate />
     <Route path="/vacancy" exact component={Vacancy} isPrivate />

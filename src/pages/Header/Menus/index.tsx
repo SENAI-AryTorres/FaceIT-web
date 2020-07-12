@@ -105,6 +105,7 @@ const Dashboard: React.FC = () => {
     localStorage.removeItem('FaceIT:user');
     localStorage.removeItem('FaceIT:token');
     window.setTimeout(document.location.reload(), 1000);
+
   };
   // const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 

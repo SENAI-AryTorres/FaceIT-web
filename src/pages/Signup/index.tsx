@@ -6,7 +6,7 @@ import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 import axios from 'axios';
 import * as Yup from 'yup';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import api from '../../services/api';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
@@ -41,6 +41,7 @@ interface SignUpFormData {
 }
 const SignUp: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
+  const history = useHistory();
   const [pfShow, setPfShow] = useState(true);
   const [dataInit, setDataInit] = useState<SignUpFormData>(
     {} as SignUpFormData,
@@ -224,7 +225,7 @@ const SignUp: React.FC = () => {
           };
           await api.post('/PessoaJuridica', pessoaJuridica);
         }
-        console.log(data.pfpj);
+        history.push('/');
 
         addToast({
           type: 'success',
@@ -368,15 +369,15 @@ const SignUp: React.FC = () => {
                   name="telefone"
                   icon={FiLock}
                   type="text"
-                  placeholder="Telefone"
+                  placeholder=" DDD + Telefone"
                   tamanho={50}
-                  maxLength={11}
+                  maxLength={10}
                 />
                 <Input
                   name="celular"
                   icon={FiUser}
                   type="text"
-                  placeholder="Celular"
+                  placeholder=" DDD + Celular"
                   tamanho={50}
                   maxLength={11}
                 />
