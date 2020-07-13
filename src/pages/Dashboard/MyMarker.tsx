@@ -41,20 +41,23 @@ const MyMarker: React.FC<Marker> = ({ text, tooltip, idProposta }) => {
   );
 
   return (
-    <div className="circle">
-      <span className="circleText" title={tooltip}>
-        {text}
-        <Paper>
-          <Button
-            onClick={(): void => {
-              handleMapClick(idProposta);
-            }}
-          >
-            Cadastre-se
-          </Button>
-        </Paper>
-      </span>
-    </div>
+    <>
+      <div className="circle">
+        <div className="circleText" title={tooltip}>
+          {text}
+        </div>
+      </div>
+      <Paper className="paperVaga">
+        <div className="textVaga">{tooltip}</div>
+        <Button
+          onClick={(): void => {
+            handleMapClick(idProposta);
+          }}
+        >
+          Cadastre-se
+        </Button>
+      </Paper>
+    </>
   );
 };
 

@@ -29,6 +29,35 @@
   height: 50px;
 
 }
+.textVaga{
+  padding:10px;
+font-size:16px;
+font-weight:bold;
+  color:#666;
+}
+
+.paperVaga {
+  background-color: #ffffff;
+  -webkit-transition: .5s all;
+  -webkit-transition-delay: 5s;
+  -moz-transition: .5s all;
+  -moz-transition-delay: 5s;
+  -ms-transition: .5s all;
+  -ms-transition-delay: 5s;
+  -o-transition: .5s all;
+  -o-transition-delay: 5s;
+  transition: .5s all;
+  transition-delay: 5s;
+  /* //display: none; */
+}
+
+.circle:hover + div {
+  background-color: #cccccc;
+  display: block !important;
+  transition-delay:12s;
+}
+
+
 
 .MuiPaper-root{
   width:150px
