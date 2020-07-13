@@ -4,18 +4,19 @@ import api from '../../services/api';
 import { Container, Content, AnimationContainer } from './styles';
 // import api from '../../services/api';
 // import { useToast } from '../../hooks/Toast';
-// import { useAuth } from '../../hooks/Auth';
+ import { useAuth } from '../../hooks/Auth';
 
 interface PropostaItem {
   descricao: string;
   idProposta: string;
+  tipoContrato: string;
 }
 
 
 const MyVacanciesPf: React.FC = () => {
   const token = localStorage.getItem('FaceIT:token');
   const [propostaRetorno, setPropostas] = useState<PropostaItem[]>([]);
-  // const { user } = useAuth();
+   const { user } = useAuth();
 
 
 
@@ -24,8 +25,9 @@ const MyVacanciesPf: React.FC = () => {
       headers: { Authorization: `Bearer ${token}` },
     };
 
-     api.get(`/Candidato/39`,config).then((res)=>{
-       console.log(res.data);
+     api.get(`/Candidato/Propostas/${user.idPessoa}`,config).then((res)=>{
+       const propostas = res.data;
+       setPropostas(propostas);
      })
   })
  
@@ -34,19 +36,21 @@ const MyVacanciesPf: React.FC = () => {
     <Container>
       <Content>
         <AnimationContainer>
-          <Grid container spacing={3}>
-           
-              <Grid item xs={12} sm={4}>
+        <Grid container spacing={4}>
+           {propostaRetorno.map((s) => (
+             <Grid item xs={12} sm={4} key={s.idProposta}>
                 <Card className="custom-card">
                   <div className="card-body">
-                    <h5 className="card-title">Proposta</h5>
-                    <br />
-                    
+                     <h5 className="card-title">Proposta</h5>
+                       <br />
+                     <h6 className="card-description">{s.descricao}</h6>
+                       <br />
+                       <h5>Tipo de Contrato</h5>
+                       <h5>{s.tipoContrato}</h5>
                   </div>
-                 
                 </Card>
-              </Grid>
-        
+             </Grid>
+           ))}
           </Grid>
         </AnimationContainer>
       </Content>
