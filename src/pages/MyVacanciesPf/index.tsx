@@ -36,7 +36,7 @@ const MyVacanciesPf: React.FC = () => {
     <Container>
       <Content>
         <AnimationContainer>
-        <Grid container spacing={4}>
+        <Grid container spacing={1}>
            {propostaRetorno.map((s) => (
              <Grid item xs={12} sm={4} key={s.idProposta}>
                 <Card className="custom-card">
@@ -45,7 +45,7 @@ const MyVacanciesPf: React.FC = () => {
                        <br />
                      <h6 className="card-description">{s.descricao}</h6>
                        <br />
-                       <h5>Tipo de Contrato</h5>
+                       <h5 style={{fontWeight:"bold"}}>Tipo de Contrato</h5>
                        <h5>{s.tipoContrato}</h5>
                   </div>
                 </Card>

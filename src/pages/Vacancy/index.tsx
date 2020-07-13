@@ -28,6 +28,7 @@ const useStyles = makeStyles((theme: Theme) =>
 interface VacancyFormData {
   descricao: string;
   tipoContrato: string;
+  cidade:string;
   latitude:string;
   longitude:String;
 }
@@ -55,6 +56,7 @@ const Vacancy: React.FC = () => {
         const schema = Yup.object().shape({
           descricao: Yup.string().required('Sobrenome obrigatório'),
           tipoContrato: Yup.string().required('Tipo de Contrato obrigatório'),
+          cidade: Yup.string().required('Cidade é obrigatório').min(5, 'Quantidade de caracteres inválida')
           // rg: Yup.string().required('RG obrigatório').min(9, 'RG Inválido. Corrija a quantidade de caracteres'),
         });
 
@@ -76,7 +78,7 @@ const Vacancy: React.FC = () => {
           idEmpresa: user.idPessoa,
           descricao: data.descricao,
           tipoContrato: data.tipoContrato,
-          cidade: 'São Paulo',
+          cidade: data.cidade,
           encerrada: false,
           latitude: latLong.data.results[0].geometry.location.lat,
           longitude: latLong.data.results[0].geometry.location.lng,
@@ -133,6 +135,11 @@ const Vacancy: React.FC = () => {
                 marginLeft: '0px',
               }}
             />
+
+          <TextField 
+           fullWidth
+           placeholder="Cidade" 
+           name="cidade"/>
 
             {/* <label
               htmlFor="tipoContrato"
