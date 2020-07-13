@@ -6,6 +6,7 @@ import api from '../../services/api';
 import { useToast } from '../../hooks/Toast';
 import { useAuth } from '../../hooks/Auth';
 
+
 interface PropostaItem {
   descricao: string;
   idProposta: string;
@@ -29,7 +30,7 @@ const Opportunities: React.FC = () => {
     // Carrega os dados do drop down
     api.get(`/proposta`, config).then((res) => {
       const proposta: PropostaItem[] = res.data;
-      setPropostas(proposta);
+    setPropostas(proposta);
     });
   }, [token]);
 
@@ -45,6 +46,11 @@ const Opportunities: React.FC = () => {
       };
 
       api.post(`/Candidato`, candidatura, config);
+      addToast({
+        type: 'success',
+        title: 'Sua Candidatura Foi Realizada!',
+        description: 'Agora é só esperar o contato da empresa. Boa Sorte!',
+      });
     },
 
     [token],

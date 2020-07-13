@@ -1,6 +1,6 @@
-import React from 'react';
+import React,{useState, useEffect} from 'react';
 import { Card, Grid} from '@material-ui/core';
-
+import api from '../../services/api';
 import { Container, Content, AnimationContainer } from './styles';
 // import api from '../../services/api';
 // import { useToast } from '../../hooks/Toast';
@@ -13,12 +13,21 @@ interface PropostaItem {
 
 
 const MyVacanciesPf: React.FC = () => {
-  // const token = localStorage.getItem('FaceIT:token');
-  // const [propostaRetorno, setPropostas] = useState<PropostaItem[]>([]);
-  // const { addToast } = useToast();
+  const token = localStorage.getItem('FaceIT:token');
+  const [propostaRetorno, setPropostas] = useState<PropostaItem[]>([]);
   // const { user } = useAuth();
 
-  
+
+
+  useEffect(() =>{
+    const config = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
+
+     api.get(`/Candidato/39`,config).then((res)=>{
+       console.log(res.data);
+     })
+  })
  
 
   return (
