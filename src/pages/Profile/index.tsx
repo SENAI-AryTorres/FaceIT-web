@@ -46,7 +46,7 @@ interface SkillItem {
 }
 
 interface SkillItemUser {
-  id: {
+  id?: {
     descricao: string;
   };
   idPessoa: string;
@@ -210,7 +210,7 @@ const Perfil: React.FC = () => {
     selects.map((s): void => {
       const item = skillRetorno.filter((c) => c.descricao === s);
       skills.push({
-        id: { descricao: s },
+        //id: { descricao: s },
         idPessoa: user.idPessoa,
         idSkill: item[0].idSkill,
         idTipoSkill: item[0].idTipoSkill,
