@@ -52,7 +52,7 @@ interface SkillItemUser {
   idPessoa: string;
   idSkill: number;
   idTipoSkill: number;
-  descricao: string;
+  descricao?: string;
 }
 
 interface Skills {
@@ -214,7 +214,6 @@ const Perfil: React.FC = () => {
         idPessoa: user.idPessoa,
         idSkill: item[0].idSkill,
         idTipoSkill: item[0].idTipoSkill,
-        descricao: s,
       });
     });
     setUserEdit({
