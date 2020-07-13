@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button, Paper } from '@material-ui/core';
 
 interface Marker {
   lat: number;
@@ -12,6 +13,9 @@ const MyMarker = ({ text, tooltip }: Marker) => (
   <div className="circle">
     <span className="circleText" title={tooltip}>
       {text}
+      <Paper>
+        <Button>Cadastre-se</Button>
+      </Paper>
     </span>
   </div>
 );
