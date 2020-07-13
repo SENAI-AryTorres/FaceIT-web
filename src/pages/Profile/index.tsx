@@ -391,11 +391,11 @@ const Perfil: React.FC = () => {
                 bairro: data.bairro,
                 idPessoa: data.idPessoa,
               },
-              imagem: {
-                idPessoa: data.idPessoa,
-                nome: 'string',
-                bytes: 'string',
-              },
+              // imagem: {
+              //   idPessoa: data.idPessoa,
+              //   nome: 'string',
+              //   bytes: 'string',
+              // },
             },
           };
           await api.put('/PessoaJuridica', pessoaJuridica, config);

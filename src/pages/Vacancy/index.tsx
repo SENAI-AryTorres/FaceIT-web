@@ -1,7 +1,7 @@
-import React, { useCallback, useRef, useState, ChangeEvent } from 'react';
+import React, { useCallback, useRef, useState, ChangeEvent, useEffect } from 'react';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
-
+import axios from 'axios'
 import { Select, TextField } from 'unform-material-ui';
 import * as Yup from 'yup';
 import { useHistory } from 'react-router-dom';
@@ -28,6 +28,8 @@ const useStyles = makeStyles((theme: Theme) =>
 interface VacancyFormData {
   descricao: string;
   tipoContrato: string;
+  latitude:string;
+  longitude:String;
 }
 
 const Vacancy: React.FC = () => {
@@ -39,9 +41,11 @@ const Vacancy: React.FC = () => {
   const history = useHistory();
   const [selectValue, setSelect] = useState<string>();
 
+
   const handleChangeInput = (event: ChangeEvent<{ value: unknown }>): void => {
     setSelect(event.target.value as string);
   };
+
 
   const handleSubmit = useCallback(
     async (data: VacancyFormData) => {
@@ -57,6 +61,21 @@ const Vacancy: React.FC = () => {
           abortEarly: false,
         });
 
+        const config = {
+          headers: { Authorization: `Bearer ${token}` },
+        };
+        // Carrega os dados do drop down
+       await api.get(`/PessoaJuridica/${user.idPessoa}`, config).then((res) => {
+          const resposta = res.data.idPessoaNavigation.endereco.cep;
+    
+          axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${resposta}&key=AIzaSyDnMaMRTgy5jqKujNVs7xNpN_XSV-oAjYk`)
+            .then((res) => {
+              const lat = res.data.results[0].geometry.location.lat;
+              const long = res.data.results[0].geometry.location.lng;
+            })
+    
+        });
+
         const vaga = {
           idProposta: 0,
           idEmpresa: user.idPessoa,
@@ -67,9 +86,7 @@ const Vacancy: React.FC = () => {
           latitude: '11515151',
           longitude: '2322323232',
         };
-        const config = {
-          headers: { Authorization: `Bearer ${token}` },
-        };
+       
         await api.post(`/Proposta`, vaga, config);
 
         addToast({

@@ -5,5 +5,6 @@ export const Container = styled.div`
   right: 0;
   top: 0;
   padding: 30px;
+  padding-top:200px;
   overflow: hidden;
 `;

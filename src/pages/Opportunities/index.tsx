@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Card, Grid, Button } from '@material-ui/core';
 import Icon from '@material-ui/core/Icon';
-import { Form } from '@unform/web';
 import { Container, Content, AnimationContainer } from './styles';
 import api from '../../services/api';
 import { useToast } from '../../hooks/Toast';
@@ -48,7 +47,7 @@ const Opportunities: React.FC = () => {
       api.post(`/Candidato`, candidatura, config);
     },
 
-    [],
+    [token],
   );
 
   return (

@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState,useEffect} from 'react';
 import { Card, Grid, Button } from '@material-ui/core';
 import { Container, Content, AnimationContainer } from './styles';
 import api from '../../services/api';
-import { useToast } from '../../hooks/Toast';
 import { useAuth } from '../../hooks/Auth';
 import '../../styles/global';
+
 interface PropostaItem {
   descricao: string;
   idProposta: string;
@@ -18,7 +18,6 @@ interface CandidaturaItem {
 const MyVacanciesPj: React.FC = () => {
   const token = localStorage.getItem('FaceIT:token');
   const [propostaRetorno, setPropostas] = useState<PropostaItem[]>([]);
-  const { addToast } = useToast();
   const { user } = useAuth();
 
   

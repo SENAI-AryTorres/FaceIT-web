@@ -15,6 +15,13 @@ import getValidationsErros from '../../utils/getValidationsErrors';
 import { useToast } from '../../hooks/Toast';
 import { Container, Content, AnimationContainer, Background } from './styles';
 
+
+interface GeocodeData{
+  latitude: string;
+  longitude:string;
+}
+
+
 interface SignUpFormData {
   pfpj: string;
   pfpjtipo: string;
@@ -151,6 +158,7 @@ const SignUp: React.FC = () => {
         await schema.validate(data, {
           abortEarly: false,
         });
+      
 
         if (data.pfpj === 'PF') {
           const pessoaFisica = {
@@ -179,6 +187,10 @@ const SignUp: React.FC = () => {
                 bairro: data.bairro,
                 idPessoa: 0,
               },
+              
+                
+               
+              
               // "imagem": {
               //   "idPessoa": 0,
               //   "nome": "string",
@@ -186,7 +198,7 @@ const SignUp: React.FC = () => {
               // },
             },
           };
-
+          
           await api.post('/PessoaFisica', pessoaFisica);
         } else {
           const pessoaJuridica = {
@@ -221,6 +233,7 @@ const SignUp: React.FC = () => {
               //   nome: 'string',
               //   bytes: 'string',
               // },
+            
             },
           };
           await api.post('/PessoaJuridica', pessoaJuridica);
@@ -246,7 +259,7 @@ const SignUp: React.FC = () => {
         });
       }
     },
-    [addToast],
+    [addToast,history],
   );
 
   return (

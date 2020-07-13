@@ -1,27 +1,22 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Card, Grid, Button } from '@material-ui/core';
-import Icon from '@material-ui/core/Icon';
-import { Form } from '@unform/web';
+import React from 'react';
+import { Card, Grid} from '@material-ui/core';
+
 import { Container, Content, AnimationContainer } from './styles';
-import api from '../../services/api';
-import { useToast } from '../../hooks/Toast';
-import { useAuth } from '../../hooks/Auth';
+// import api from '../../services/api';
+// import { useToast } from '../../hooks/Toast';
+// import { useAuth } from '../../hooks/Auth';
 
 interface PropostaItem {
   descricao: string;
   idProposta: string;
 }
 
-interface CandidaturaItem {
-  idProposta: number;
-  idPessoa: number;
-}
 
 const MyVacanciesPf: React.FC = () => {
-  const token = localStorage.getItem('FaceIT:token');
-  const [propostaRetorno, setPropostas] = useState<PropostaItem[]>([]);
-  const { addToast } = useToast();
-  const { user } = useAuth();
+  // const token = localStorage.getItem('FaceIT:token');
+  // const [propostaRetorno, setPropostas] = useState<PropostaItem[]>([]);
+  // const { addToast } = useToast();
+  // const { user } = useAuth();
 
   
  
@@ -37,8 +32,7 @@ const MyVacanciesPf: React.FC = () => {
                   <div className="card-body">
                     <h5 className="card-title">Proposta</h5>
                     <br />
-                    <h6 className="card-description"></h6>
-                    <br />
+                    
                   </div>
                  
                 </Card>
