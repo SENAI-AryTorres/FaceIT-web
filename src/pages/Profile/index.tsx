@@ -45,6 +45,16 @@ interface SkillItem {
   idTipoSkill: number;
 }
 
+interface SkillItemUserRetorno {
+  id: {
+    descricao: string;
+  };
+  idPessoa: number;
+  idSkill: number;
+  idTipoSkill: number;
+  descricao: string;
+}
+
 interface SkillItemUser {
   idPessoa: string;
   idSkill: number;
@@ -177,17 +187,25 @@ const Perfil: React.FC = () => {
 
     const urlSkill = '/pessoaskill';
     api.get(`${urlSkill}/${user.idPessoa}`, config).then((res) => {
-      const selects: SkillItemUser[] = res.data;
+      const selects: SkillItemUserRetorno[] = res.data;
+
       const skillsStrings = [] as string[];
+      const skillsUser = [] as SkillItemUser[];
       selects.map((s): void => {
-        skillsStrings.push(s.descricao);
+        skillsStrings.push(s.id.descricao);
+        skillsUser.push({
+          idPessoa: user.idPessoa,
+          idSkill: s.idSkill,
+          idTipoSkill: s.idTipoSkill,
+          descricao: s.id.descricao,
+        });
       });
       // setUserEdit({
       //   ...userEdit,
       //   pessoaSkill: JSON.stringify(selects),
       // });
 
-      setSkillUser(selects);
+      setSkillUser(skillsUser);
       setSkillUserInput(skillsStrings);
     });
     // console.log(userSkillInput);
@@ -210,7 +228,7 @@ const Perfil: React.FC = () => {
         idPessoa: user.idPessoa,
         idSkill: item[0].idSkill,
         idTipoSkill: item[0].idTipoSkill,
-        descricao: s
+        descricao: s,
       });
     });
     setUserEdit({
