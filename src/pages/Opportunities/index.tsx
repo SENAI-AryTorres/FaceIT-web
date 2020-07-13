@@ -6,7 +6,6 @@ import api from '../../services/api';
 import { useToast } from '../../hooks/Toast';
 import { useAuth } from '../../hooks/Auth';
 
-
 interface PropostaItem {
   descricao: string;
   idProposta: string;
@@ -30,7 +29,7 @@ const Opportunities: React.FC = () => {
     // Carrega os dados do drop down
     api.get(`/proposta`, config).then((res) => {
       const proposta: PropostaItem[] = res.data;
-    setPropostas(proposta);
+      setPropostas(proposta);
     });
   }, [token]);
 

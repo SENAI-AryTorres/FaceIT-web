@@ -12,35 +12,35 @@ const points = [
 ];
 
 interface MarkerItem {
-  idProposta:number,
-  latitude:number,
-  longitude:number,
-  descricao:string
+  idProposta: number;
+  latitude: number;
+  longitude: number;
+  descricao: string;
 }
 
 const Dashboard: React.FC = () => {
   const token = localStorage.getItem('FaceIT:token');
- const [marker, setMarkers] =  useState<MarkerItem[]>([]);
+  const [marker, setMarkers] = useState<MarkerItem[]>([]);
   useEffect(() => {
     const config = {
       headers: { Authorization: `Bearer ${token}` },
     };
     // Carrega os dados do drop down
-    api.get(`/Proposta`,config).then((res) => {
+    api.get(`/Proposta`, config).then((res) => {
       const marca: MarkerItem[] = res.data;
       setMarkers(marca);
     });
   }, [token]);
-
 
   return (
     <>
       <Container>
         <Content>
           <AnimationContainer>
-            <Grid container >
-            <Grid item xs={12} sm={12}>
-                <GoogleMapReact style={{width:"100%", height:"50%"}}
+            <Grid container>
+              <Grid item xs={12} sm={12}>
+                <GoogleMapReact
+                  style={{ width: '100%', height: '50%' }}
                   bootstrapURLKeys={{
                     key: 'AIzaSyDnMaMRTgy5jqKujNVs7xNpN_XSV-oAjYk',
                     language: 'PT-BR',
@@ -49,24 +49,26 @@ const Dashboard: React.FC = () => {
                   defaultCenter={{ lat: -23.5489, lng: -46.6388 }}
                   defaultZoom={14}
                 >
-                  {marker.map(({ latitude,longitude,idProposta,descricao }) => {
-                    return (
-                      <MyMarker
-                        key={idProposta}
-                        lat={latitude}
-                        lng={longitude}
-                        tooltip={descricao}
-                        text={idProposta}
-                      />
-                    );
-                  })}
+                  {marker.map(
+                    ({ latitude, longitude, idProposta, descricao }) => {
+                      return (
+                        <MyMarker
+                          key={idProposta}
+                          lat={latitude}
+                          lng={longitude}
+                          tooltip={descricao}
+                          text={idProposta}
+                          idProposta={idProposta}
+                        />
+                      );
+                    },
+                  )}
                 </GoogleMapReact>
-      </Grid>
+              </Grid>
             </Grid>
           </AnimationContainer>
         </Content>
       </Container>
-      
     </>
   );
 };

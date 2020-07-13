@@ -29,6 +29,10 @@
   height: 50px;
 
 }
+
+.MuiPaper-root{
+  width:150px
+}
 .MuiInputBase-input{
   color: white !important;
 }
