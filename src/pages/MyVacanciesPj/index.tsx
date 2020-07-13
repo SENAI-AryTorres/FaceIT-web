@@ -34,7 +34,7 @@ import '../../styles/global.css';
 interface PropostaItem {
   descricao: string;
   idProposta: number;
-  cidade:string;
+  cidade: string;
 }
 interface VacancyFormData {
   idProposta: number;
@@ -48,6 +48,53 @@ interface VacancyFormData {
 interface CandidaturaItem {
   idProposta: number;
   idPessoa: number;
+}
+
+interface Candidato {
+  name: string;
+  rg: string;
+  cpf: string;
+  email: string;
+  password: string;
+  passwordConfirm: string;
+  telefone: string;
+  cep: string;
+  logradouro: string;
+  numero: string;
+  complemento: string;
+  uf: string;
+  bairro: string;
+  municipio: string;
+  celular: string;
+  idPessoa: string;
+  pessoaSkill: string;
+}
+
+interface CandidatoResp {
+  cpf: string;
+  idPessoa: string;
+  nome: string;
+  sobrenome: string;
+  rg: string;
+  idPessoaNavigation: {
+    candidato: {};
+    celular: string;
+    email: string;
+    endereco: {
+      bairro: string;
+      cep: string;
+      complemento: string;
+      idPessoa: string;
+      logradouro: string;
+      municipio: string;
+      numero: string;
+      pais: string;
+      uf: string;
+    };
+    pessoaSkill: string;
+    telefone: string;
+    tipo: string;
+  };
 }
 
 function rand() {
@@ -75,6 +122,14 @@ const useStyles = makeStyles((theme: Theme) =>
       boxShadow: theme.shadows[5],
       padding: theme.spacing(2, 4, 3),
     },
+    paper2: {
+      position: 'absolute',
+      width: 600,
+      backgroundColor: theme.palette.background.paper,
+      border: '2px solid #000',
+      boxShadow: theme.shadows[5],
+      padding: theme.spacing(2, 4, 3),
+    },
     root: {
       '& .MuiTextField-root': {
         margin: theme.spacing(1),
@@ -93,38 +148,72 @@ const MyVacanciesPj: React.FC = () => {
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
+  const [openList, setOpenList] = React.useState(false);
   const { addToast } = useToast();
   const history = useHistory();
   const [propostaEdit, setPropostaEdit] = useState<VacancyFormData>(
     {} as VacancyFormData,
   );
+  const [candidatos, setCandidatos] = useState<Candidato[]>([]);
+
+  const [descricaoVaga, setDescricao] = useState<string>();
+
   const config = {
     headers: { Authorization: `Bearer ${token}` },
+  };
+
+  const handleOpenList = useCallback(
+    async (idProposta: number, descricao: string) => {
+      api.get(`/Candidato/${idProposta}`, config).then((resList) => {
+        const list: CandidaturaItem[] = resList.data;
+        console.log(list);
+        setDescricao(descricao);
+        list.map((s: CandidaturaItem) => {
+          api.get(`/PessoaFisica/${s.idPessoa}`, config).then((res) => {
+            const userProp: CandidatoResp = res.data;
+
+            const userEditBanco: Candidato = {
+              name: userProp.nome,
+              rg: userProp.rg,
+              cpf: userProp.cpf,
+              email: userProp.idPessoaNavigation.email,
+              password: '',
+              passwordConfirm: '',
+              telefone: userProp.idPessoaNavigation.telefone,
+              cep: userProp.idPessoaNavigation.endereco.cep,
+              logradouro: userProp.idPessoaNavigation.endereco.logradouro,
+              numero: userProp.idPessoaNavigation.endereco.numero,
+              complemento: userProp.idPessoaNavigation.endereco.complemento,
+              uf: userProp.idPessoaNavigation.endereco.uf,
+              bairro: userProp.idPessoaNavigation.endereco.bairro,
+              municipio: userProp.idPessoaNavigation.endereco.municipio,
+              celular: userProp.idPessoaNavigation.celular,
+              idPessoa: userProp.idPessoa,
+              pessoaSkill: userProp.idPessoaNavigation.pessoaSkill,
+            };
+
+            setCandidatos([...candidatos, userEditBanco]);
+          });
+        });
+        setOpenList(true);
+      });
+    },
+    [candidatos, config, setCandidatos],
+  );
+  const handleListClose = () => {
+    setOpenList(false);
   };
 
   const handleOpen = useCallback(
     async (idProposta: number) => {
       api.get(`/Proposta/${idProposta}`, config).then((res) => {
         const proposta: VacancyFormData = res.data[0];
-        console.log(proposta);
         setPropostaEdit(proposta);
         setOpen(true);
       });
     },
     [config, setPropostaEdit],
   );
-
-  // const handleOpen = (idProposta: number): void => {
-  //   api.get(`/Proposta/${idProposta}`, config).then((res) => {
-  //     const proposta: VacancyFormData = res.data;
-  //     console.log(proposta);
-  //     setPropostaEdit(proposta);
-  //   });
-
-  //   // setPropostaEdit([...propostaEdit]);
-  //   setOpen(true);
-  // };
-
   const handleClose = () => {
     setOpen(false);
   };
@@ -133,14 +222,13 @@ const MyVacanciesPj: React.FC = () => {
   };
 
   useEffect(() => {
-    // Carrega os dados do drop down
     api
       .get(`/Proposta/PropostasEmpresa/${user.idPessoa}`, config)
       .then((res) => {
         const proposta: PropostaItem[] = res.data;
         setPropostas(proposta);
       });
-  }, [token, user.idPessoa]);
+  }, [config, token, user.idPessoa]);
 
   const handleSubmit = useCallback(
     async (data: VacancyFormData) => {
@@ -302,11 +390,68 @@ const MyVacanciesPj: React.FC = () => {
                   }}
                 />
               </FormControl>
-              <Button className="custom-button_edit" type="submit">Atualizar</Button>
+              <Button className="custom-button_edit" type="submit">
+                Atualizar
+              </Button>
             </Form>
           </AnimationContainer>
         </Content>
       </Container>
+    </div>
+  );
+  const bodyList = (
+    <div style={modalStyle} className={classes.paper2}>
+      <h1>Candidatos para a vaga</h1>
+      <h3>
+        <span>Descrição:</span>
+        {descricaoVaga}
+      </h3>
+      {candidatos.map((s) => (
+        <div className="candContent">
+          <div className="candContentImage">
+            <img
+              src="https://avatars3.githubusercontent.com/u/271936?s=460&u=8f17648ac23b3b7ceda9d0aafe1f492d937e3648&v=4"
+              alt="Face It"
+            />
+          </div>
+          <div className="candDesc">
+            <div>
+              <div className="cand1">
+                <b>Nome:</b>
+                {s.name}
+              </div>
+              <div className="cand2">
+                <b>Email:</b>
+                {s.email}
+              </div>
+            </div>
+            <div>
+              <div className="cand1">
+                <b>CPF:</b>
+                {s.cpf}
+              </div>
+              <div className="cand2">
+                <b>RG:</b>
+                {s.rg}
+              </div>
+            </div>
+            <div>
+              <div className="cand1">
+                <b>Endereço</b>:{s.logradouro},{s.numero} - {s.complemento}
+              </div>
+              <div className="cand1">
+                <b>Bairro:</b>
+                {s.bairro}{' '}
+              </div>
+              <div className="cand2">
+                <b>UF:</b>
+                {s.uf}
+              </div>
+            </div>
+            <div />
+          </div>
+        </div>
+      ))}
     </div>
   );
   return (
@@ -321,6 +466,14 @@ const MyVacanciesPj: React.FC = () => {
           >
             {body}
           </Modal>
+          <Modal
+            open={openList}
+            onClose={handleListClose}
+            aria-labelledby="simple-modal-title"
+            aria-describedby="simple-modal-description"
+          >
+            {bodyList}
+          </Modal>
           <Grid container spacing={4}>
             {propostaRetorno.map((s) => (
               <Grid item xs={12} sm={4} key={s.idProposta}>
@@ -330,9 +483,13 @@ const MyVacanciesPj: React.FC = () => {
                     <br />
                     <h6 className="card-description">{s.descricao}</h6>
                     <br />
-                    <h6 className="card-description" style={{fontWeight:"bold"}}>Local da vaga (Cidade)</h6>
+                    <h6
+                      className="card-description"
+                      style={{ fontWeight: 'bold' }}
+                    >
+                      Local da vaga (Cidade)
+                    </h6>
                     <h6 className="card-description">{s.cidade}</h6>
-                   
                   </div>
                   <div className="row">
                     <Grid container spacing={2}>
@@ -344,7 +501,16 @@ const MyVacanciesPj: React.FC = () => {
                         >
                           Editar
                         </button>
-                        {/* <Button className="custom-button_edit">Editar</Button> */}
+                      </Grid>
+                      <Grid item xs={12} sm={12}>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            handleOpenList(s.idProposta, s.descricao)}
+                          className="custom-button_edit_list"
+                        >
+                          Ver Candidatos
+                        </button>
                       </Grid>
                     </Grid>
                   </div>
