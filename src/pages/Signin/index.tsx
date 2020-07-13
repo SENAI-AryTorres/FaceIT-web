@@ -13,6 +13,7 @@ import Input from '../../components/Input';
 import Button from '../../components/Button';
 
 import { Container, Content, AnimationContainer, Background } from './styles';
+import { userInfo } from 'os';
 
 interface SignInFormData {
   email: string;
@@ -24,7 +25,6 @@ const SignIn: React.FC = () => {
   const { signIn } = useAuth();
   const { addToast } = useToast();
   const history = useHistory();
-
   
   const handleSubmit = useCallback(
     async (data: SignInFormData) => {
@@ -40,10 +40,11 @@ const SignIn: React.FC = () => {
         await schema.validate(data, {
           abortEarly: false,
         });
-
         await signIn({ email: data.email, senha: data.senha });
 
-        history.push('/dashboard');
+      history.push('/faq');
+    
+      
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationsErros(err);

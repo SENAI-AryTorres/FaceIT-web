@@ -29,10 +29,12 @@ import { useToast } from '../../hooks/Toast';
 import { useAuth } from '../../hooks/Auth';
 import api from '../../services/api';
 import Input from '../../components/Input';
+import '../../styles/global.css';
 
 interface PropostaItem {
   descricao: string;
   idProposta: number;
+  cidade:string;
 }
 interface VacancyFormData {
   idProposta: number;
@@ -300,7 +302,7 @@ const MyVacanciesPj: React.FC = () => {
                   }}
                 />
               </FormControl>
-              <Button type="submit">Atualizar</Button>
+              <Button className="custom-button_edit" type="submit">Atualizar</Button>
             </Form>
           </AnimationContainer>
         </Content>
@@ -328,6 +330,9 @@ const MyVacanciesPj: React.FC = () => {
                     <br />
                     <h6 className="card-description">{s.descricao}</h6>
                     <br />
+                    <h6 className="card-description" style={{fontWeight:"bold"}}>Local da vaga (Cidade)</h6>
+                    <h6 className="card-description">{s.cidade}</h6>
+                   
                   </div>
                   <div className="row">
                     <Grid container spacing={2}>
@@ -335,6 +340,7 @@ const MyVacanciesPj: React.FC = () => {
                         <button
                           type="button"
                           onClick={() => handleOpen(s.idProposta)}
+                          className="custom-button_edit"
                         >
                           Editar
                         </button>

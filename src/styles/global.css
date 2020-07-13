@@ -108,9 +108,11 @@ font-weight:bold;
 .custom-button_edit{
   background-color: lightblue !important;
   color:white !important;
-  border-radius: 1px !important;
+  border-width: 1px !important;
   text-align: center !important;
   border-radius: 5px !important;
+  width:50% !important;
+  height: 30px;
 }
 
 .custom-button_edit:hover{
