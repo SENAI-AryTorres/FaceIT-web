@@ -42,6 +42,7 @@ const Vacancy: React.FC = () => {
   const [selectValue, setSelect] = useState<string>();
 
 
+
   const handleChangeInput = (event: ChangeEvent<{ value: unknown }>): void => {
     setSelect(event.target.value as string);
   };
@@ -64,17 +65,11 @@ const Vacancy: React.FC = () => {
         const config = {
           headers: { Authorization: `Bearer ${token}` },
         };
-        // Carrega os dados do drop down
-       await api.get(`/PessoaJuridica/${user.idPessoa}`, config).then((res) => {
-          const resposta = res.data.idPessoaNavigation.endereco.cep;
-    
-          axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${resposta}&key=AIzaSyDnMaMRTgy5jqKujNVs7xNpN_XSV-oAjYk`)
-            .then((res) => {
-              const lat = res.data.results[0].geometry.location.lat;
-              const long = res.data.results[0].geometry.location.lng;
-            })
-    
-        });
+
+
+
+          const resCEP = await api.get(`/PessoaJuridica/${user.idPessoa}`, config);
+          const latLong = await   axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${resCEP.data.idPessoaNavigation.endereco.cep}&key=AIzaSyDnMaMRTgy5jqKujNVs7xNpN_XSV-oAjYk`)
 
         const vaga = {
           idProposta: 0,
@@ -83,8 +78,8 @@ const Vacancy: React.FC = () => {
           tipoContrato: data.tipoContrato,
           cidade: 'São Paulo',
           encerrada: false,
-          latitude: '11515151',
-          longitude: '2322323232',
+          latitude: latLong.data.results[0].geometry.location.lat,
+          longitude: latLong.data.results[0].geometry.location.lng,
         };
        
         await api.post(`/Proposta`, vaga, config);
