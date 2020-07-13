@@ -46,13 +46,10 @@ interface SkillItem {
 }
 
 interface SkillItemUser {
-  id?: {
-    descricao: string;
-  };
   idPessoa: string;
   idSkill: number;
   idTipoSkill: number;
-  descricao?: string;
+  descricao: string;
 }
 
 interface Skills {
@@ -183,7 +180,7 @@ const Perfil: React.FC = () => {
       const selects: SkillItemUser[] = res.data;
       const skillsStrings = [] as string[];
       selects.map((s): void => {
-        skillsStrings.push(s.id.descricao);
+        skillsStrings.push(s.descricao);
       });
       // setUserEdit({
       //   ...userEdit,
@@ -210,10 +207,10 @@ const Perfil: React.FC = () => {
     selects.map((s): void => {
       const item = skillRetorno.filter((c) => c.descricao === s);
       skills.push({
-        //id: { descricao: s },
         idPessoa: user.idPessoa,
         idSkill: item[0].idSkill,
         idTipoSkill: item[0].idTipoSkill,
+        descricao: s
       });
     });
     setUserEdit({
