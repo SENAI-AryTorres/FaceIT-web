@@ -9,12 +9,10 @@ import { useAuth } from '../../hooks/Auth';
 interface PropostaItem {
   descricao: string;
   idProposta: string;
+  cidade:string
 }
 
-interface CandidaturaItem {
-  idProposta: number;
-  idPessoa: number;
-}
+
 
 const Opportunities: React.FC = () => {
   const token = localStorage.getItem('FaceIT:token');
@@ -67,6 +65,9 @@ const Opportunities: React.FC = () => {
                     <h5 className="card-title">Proposta</h5>
                     <br />
                     <h6 className="card-description">{s.descricao}</h6>
+                    <br />
+                    <h6 className="card-description" style={{fontWeight:"bold"}}>Local da Vaga (Cidade)</h6>
+                    <h6 className="card-description">{s.cidade}</h6>
                     <br />
                   </div>
                   <Button

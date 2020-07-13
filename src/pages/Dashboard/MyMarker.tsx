@@ -3,7 +3,7 @@ import { Button, Paper } from '@material-ui/core';
 import api from '../../services/api';
 import { useToast } from '../../hooks/Toast';
 import { useAuth } from '../../hooks/Auth';
-
+import '../../styles/global.css'
 interface Marker {
   lat: number;
   lng: number;
@@ -47,9 +47,9 @@ const MyMarker: React.FC<Marker> = ({ text, tooltip, idProposta }) => {
           {text}
         </div>
       </div>
-      <Paper className="paperVaga">
+      <Paper className="paper" style={{textAlign:"center",paddingBottom:"5px"}}>
         <div className="textVaga">{tooltip}</div>
-        <Button
+        <Button style={{textAlign:"center",backgroundColor:"#1fada6",color:"white"}}
           onClick={(): void => {
             handleMapClick(idProposta);
           }}

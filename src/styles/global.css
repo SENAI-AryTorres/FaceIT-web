@@ -57,11 +57,11 @@ font-weight:bold;
   transition-delay:12s;
 }
 
-
-
-.MuiPaper-root{
-  width:150px
+.paper{
+  width:150px !important;
 }
+
+
 .MuiInputBase-input{
   color: white !important;
 }
