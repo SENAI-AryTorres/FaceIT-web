@@ -97,6 +97,15 @@ interface CandidatoResp {
   };
 }
 
+interface SkillItemUserRetorno {
+  id: {
+    descricao: string;
+  };
+  idPessoa: number;
+  idSkill: number;
+  idTipoSkill: number;
+  descricao: string;
+}
 function rand() {
   return Math.round(Math.random() * 20) - 10;
 }
@@ -166,33 +175,44 @@ const MyVacanciesPj: React.FC = () => {
     async (idProposta: number, descricao: string) => {
       api.get(`/Candidato/${idProposta}`, config).then((resList) => {
         const list: CandidaturaItem[] = resList.data;
-        console.log(list);
         setDescricao(descricao);
         list.map((s: CandidaturaItem) => {
-          api.get(`/PessoaFisica/${s.idPessoa}`, config).then((res) => {
-            const userProp: CandidatoResp = res.data;
+          api.get(`/pessoaskill/${s.idPessoa}`, config).then((res) => {
+            const selects: SkillItemUserRetorno[] = res.data;
+            console.log(selects);
+            let skillsStrings = '';
+            selects.map((skill) => {
+              if (skillsStrings === '') {
+                skillsStrings += `${skill.id.descricao}`;
+              } else {
+                skillsStrings += `,${skill.id.descricao}`;
+              }
+            });
+            console.log(skillsStrings);
+            api.get(`/PessoaFisica/${s.idPessoa}`, config).then((resa) => {
+              const userProp: CandidatoResp = resa.data;
 
-            const userEditBanco: Candidato = {
-              name: userProp.nome,
-              rg: userProp.rg,
-              cpf: userProp.cpf,
-              email: userProp.idPessoaNavigation.email,
-              password: '',
-              passwordConfirm: '',
-              telefone: userProp.idPessoaNavigation.telefone,
-              cep: userProp.idPessoaNavigation.endereco.cep,
-              logradouro: userProp.idPessoaNavigation.endereco.logradouro,
-              numero: userProp.idPessoaNavigation.endereco.numero,
-              complemento: userProp.idPessoaNavigation.endereco.complemento,
-              uf: userProp.idPessoaNavigation.endereco.uf,
-              bairro: userProp.idPessoaNavigation.endereco.bairro,
-              municipio: userProp.idPessoaNavigation.endereco.municipio,
-              celular: userProp.idPessoaNavigation.celular,
-              idPessoa: userProp.idPessoa,
-              pessoaSkill: userProp.idPessoaNavigation.pessoaSkill,
-            };
-
-            setCandidatos([...candidatos, userEditBanco]);
+              const userEditBanco: Candidato = {
+                name: userProp.nome,
+                rg: userProp.rg,
+                cpf: userProp.cpf,
+                email: userProp.idPessoaNavigation.email,
+                password: '',
+                passwordConfirm: '',
+                telefone: userProp.idPessoaNavigation.telefone,
+                cep: userProp.idPessoaNavigation.endereco.cep,
+                logradouro: userProp.idPessoaNavigation.endereco.logradouro,
+                numero: userProp.idPessoaNavigation.endereco.numero,
+                complemento: userProp.idPessoaNavigation.endereco.complemento,
+                uf: userProp.idPessoaNavigation.endereco.uf,
+                bairro: userProp.idPessoaNavigation.endereco.bairro,
+                municipio: userProp.idPessoaNavigation.endereco.municipio,
+                celular: userProp.idPessoaNavigation.celular,
+                idPessoa: userProp.idPessoa,
+                pessoaSkill: skillsStrings,
+              };
+              setCandidatos([...candidatos, userEditBanco]);
+            });
           });
         });
         setOpenList(true);
@@ -420,9 +440,13 @@ const MyVacanciesPj: React.FC = () => {
                 <b>Nome:</b>
                 {s.name}
               </div>
-              <div className="cand2">
+              <div className="cand1">
                 <b>Email:</b>
                 {s.email}
+              </div>
+              <div className="cand2">
+                <b>Telefone:</b>
+                {s.celular}
               </div>
             </div>
             <div>
@@ -437,18 +461,26 @@ const MyVacanciesPj: React.FC = () => {
             </div>
             <div>
               <div className="cand1">
-                <b>Endereço</b>:{s.logradouro},{s.numero} - {s.complemento}
+                <b>Endereço</b>:{s.logradouro},{s.numero}
               </div>
+              <div className="cand2">- {s.complemento}</div>
+            </div>
+            <div>
               <div className="cand1">
                 <b>Bairro:</b>
-                {s.bairro}{' '}
+                {s.bairro}
               </div>
               <div className="cand2">
                 <b>UF:</b>
                 {s.uf}
               </div>
             </div>
-            <div />
+            <div>
+              <div className="cand1">
+                <b>Skills</b>:{s.pessoaSkill}
+              </div>
+              <div className="cand2"> </div>
+            </div>
           </div>
         </div>
       ))}
@@ -506,7 +538,8 @@ const MyVacanciesPj: React.FC = () => {
                         <button
                           type="button"
                           onClick={() =>
-                            handleOpenList(s.idProposta, s.descricao)}
+                            handleOpenList(s.idProposta, s.descricao)
+                          }
                           className="custom-button_edit_list"
                         >
                           Ver Candidatos
